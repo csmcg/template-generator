@@ -19,5 +19,6 @@
  * @author Connor S. McGarty <cmcgarty@uab.edu>
  */
 public class UserDoc {
+    
 
 }

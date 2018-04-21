@@ -2,7 +2,7 @@
  * File: Heading.java
  * Author: Connor S. McGarty <cmcgarty@uab.edu>
  * Assignment: template-generator - EE333 Spring 2018
- * Vers: 2.0.0 04/20/2018 csm - initial coding
+ * Vers: 1.0.0 04/20/2018 csm - initial coding
  *
  * Credits: 
  */
