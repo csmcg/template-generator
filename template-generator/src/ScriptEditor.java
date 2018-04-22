@@ -38,6 +38,7 @@ public class ScriptEditor {
     public static final String TAG_SECTIONS        = "_SECTIONTREE_";
     
     boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+    String userDir = System.getProperty("user.dir");
     
     /* File where sed scripts will be written to eventually be executed on
        a master template. */
@@ -49,7 +50,7 @@ public class ScriptEditor {
     public ScriptEditor() {
         
         try {
-            script = new File(System.getProperty("user.dir") + "/script.txt");
+            script = new File(System.getProperty("user.dir") + "/sedscript.txt");
             
             if (!script.exists())
                 script.createNewFile();
@@ -93,26 +94,26 @@ public class ScriptEditor {
      * 
      * @param format
      * @param usersDocument 
+     * @param saveOutputPath 
      * @throws java.io.IOException 
      * @throws java.lang.InterruptedException 
      */
-    public void runScript(FORMAT format, File usersDocument, String saveOutputPath) throws IOException, InterruptedException {
+    public void runScript(FORMAT format, File usersDocumentName, String saveOutputPath) throws IOException, InterruptedException {
         
         ProcessBuilder p;
         String scriptPath = script.getPath();
         String masterTemplatePath = null;
-        String userDir = System.getProperty("user.dir");
         
         if (format == FORMAT.TEX) {
-            masterTemplatePath =  userDir + "/src/templates/masterTemplate.tex";
+            masterTemplatePath =  userDir + "\\src\\templates\\masterTemplate.tex";
         }
         else if (format == FORMAT.RTF) {
             masterTemplatePath = "/src/templates/masterTemplate.rtf";
         }
 
         List<String> cmd = new ArrayList();
-        copyFile(new File(masterTemplatePath), usersDocument);
-        String usersDocumentPath = userDir + usersDocument.getPath();
+        copyFile(new File(masterTemplatePath), usersDocumentName);
+        String usersDocumentPath = userDir + "\\" + usersDocumentName.getPath();
 
 
         if (isWindows) {
@@ -137,11 +138,10 @@ public class ScriptEditor {
         cmd.add(usersDocumentPath);
         p = new ProcessBuilder(cmd);
         //p.directory(new File(System.getProperty("user.dir")));
-        p.start();
+        int exitCode = p.start().waitFor();
+
+        copyFile(usersDocumentName, new File(saveOutputPath + "\\" + usersDocumentName.getPath()));
         
-        copyFile(usersDocument, new File(saveOutputPath));
-        
-        //script.delete();
     }
     
     /**
@@ -157,6 +157,8 @@ public class ScriptEditor {
             destFile.createNewFile();
         }
         
+
+        
         FileChannel source = null;
         FileChannel destination = null;
         
@@ -165,9 +167,7 @@ public class ScriptEditor {
             destination = new FileOutputStream(destFile).getChannel();
             destination.transferFrom(source, 0, source.size());
         } finally {
-            if (source != null) {
-                source.close();
-            }
+
         }
     }
 }

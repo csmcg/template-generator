@@ -24,7 +24,7 @@ public class TestMain {
         ScriptEditor script = new ScriptEditor();
         //String templatePath = "templates/";
         String userDir = System.getProperty("user.dir");
-        File myDocument = new File(userDir + "/mydoc.tex");
+        File userDocumentName = new File("mydoc.tex");
         
         
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");
@@ -36,7 +36,7 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, "Test Sub Date");
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
         
-        script.runScript(FORMAT.TEX, myDocument, "C:/Users/Connor/Documents/");
+        script.runScript(FORMAT.TEX, userDocumentName, "C:\\Users\\Connor\\Documents");
         
 
     }
