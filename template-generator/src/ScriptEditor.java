@@ -99,6 +99,7 @@ public class ScriptEditor {
      * @throws java.lang.InterruptedException 
      */
     public void runScript(File master, File usersDocument) throws IOException, InterruptedException {
+        
         ProcessBuilder p;
         String scriptPath = script.getPath();
         String masterTemplatePath = master.getPath();
