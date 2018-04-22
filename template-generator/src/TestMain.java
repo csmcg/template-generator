@@ -22,8 +22,8 @@ public class TestMain {
     public static void main(String[] args) throws IOException, InterruptedException {
         
         ScriptEditor script = new ScriptEditor();
-        File myDocument = new File("C:\\Users\\Connor\\Desktop\\mydoc.tex");
-        File master = new File("C:\\Users\\Connor\\School\\333\\Team\\code\\template-generator\\template-generator\\masterTemplate.tex");
+        File myDocument = new File("mydoc.tex");
+        File master = new File("masterTemplate.tex");
         
         
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");

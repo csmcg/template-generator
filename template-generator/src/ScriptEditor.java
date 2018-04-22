@@ -102,14 +102,11 @@ public class ScriptEditor {
         ProcessBuilder p;
         String scriptPath = script.getPath();
         String masterTemplatePath = master.getPath();
-        String usersDocumentPath = usersDocument.getPath();
         String OS = System.getProperty("os.name");
         boolean isWindows;
         List<String> cmd = new ArrayList();
-        
-        
-
-
+        copyFile(master, usersDocument);
+        String usersDocumentPath = usersDocument.getPath();
         isWindows = (OS.contains("windows") || OS.contains("Windows"));
 
         if (isWindows) {
@@ -118,19 +115,22 @@ public class ScriptEditor {
             cmd.add("sed");
             cmd.add("-r");
             cmd.add("-f");
+            cmd.add(scriptPath);
+            cmd.add("-i");
         }
         else {
             cmd.add("sh"); 
             cmd.add("-c");
             cmd.add("sed");
-            cmd.add("-r");
+            cmd.add("-r");            
             cmd.add("-f");
+            cmd.add(scriptPath);
+            cmd.add("-i");            
         }
         
-        cmd.add(scriptPath);
-        cmd.add(masterTemplatePath);
+        cmd.add(usersDocumentPath);
         p = new ProcessBuilder(cmd);
-        p.redirectOutput(usersDocument);        
+        //p.redirectOutput(usersDocument);        
         p.start();
         
         /* first try at implementation, 
@@ -171,7 +171,6 @@ public class ScriptEditor {
      * @param destFile
      * @throws IOException 
      */
-    
     public void copyFile(File sourceFile, File destFile) throws IOException {
         if(!destFile.exists()) {
             destFile.createNewFile();
@@ -185,11 +184,8 @@ public class ScriptEditor {
             destination = new FileOutputStream(destFile).getChannel();
             destination.transferFrom(source, 0, source.size());
         } finally {
-            if(source != null) {
+            if (source != null) {
                 source.close();
-            }
-            if(destination != null) {
-                destination.close();
             }
         }
     }
