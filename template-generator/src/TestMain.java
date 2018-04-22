@@ -22,8 +22,9 @@ public class TestMain {
     public static void main(String[] args) throws IOException, InterruptedException {
         
         ScriptEditor script = new ScriptEditor();
-        File myDocument = new File("mydoc.tex");
-        File master = new File("masterTemplate.tex");
+        //String templatePath = "templates/";
+        String userDir = System.getProperty("user.dir");
+        File myDocument = new File(userDir + "/mydoc.tex");
         
         
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");
@@ -35,7 +36,7 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, "Test Sub Date");
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
         
-        script.runScript(master, myDocument);
+        script.runScript(FORMAT.TEX, myDocument, "C:/Users/Connor/Documents/");
         
 
     }
