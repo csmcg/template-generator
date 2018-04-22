@@ -8,6 +8,10 @@
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 enum FORMAT {
@@ -64,7 +68,7 @@ public class ScriptEditor {
         String cmd;
         
         /* The sed substitution command  */
-        cmd = String.format("\"s@%s@'%s'@g\"\n", templateField, userField);
+        cmd = String.format("s@%s@%s@g\n", templateField, userField);
         scriptStream.write(cmd.getBytes());
     }
     
@@ -88,24 +92,68 @@ public class ScriptEditor {
      * Executes sed script on master template. 
      * 
      * @param master 
+     * @param usersDocument 
+     * @throws java.io.IOException 
+     * @throws java.lang.InterruptedException 
      */
     public void runScript(File master, File usersDocument) throws IOException, InterruptedException {
+        ProcessBuilder p;
+        String scriptPath = script.getPath();
+        String masterTemplatePath = master.getPath();
+        String usersDocumentPath = usersDocument.getPath();
+        String OS = System.getProperty("os.name");
+        boolean isWindows;
+        List<String> cmd = new ArrayList();
+
+
+        isWindows = (OS.contains("windows") || OS.contains("Windows"));
+
+        if (isWindows) {
+            cmd.add("cmd.exe");
+            cmd.add("/c");
+            cmd.add("sed");
+            cmd.add("-f");
+        }
+        else {
+            cmd.add("sh"); 
+            cmd.add("-c");
+            cmd.add("sed");
+            cmd.add("-f");
+        }
+        
+        cmd.add(scriptPath);
+        cmd.add(masterTemplatePath);
+        p = new ProcessBuilder(cmd);
+        p.redirectOutput(usersDocument);        
+        p.start();
+        
+        /* first try at implementation, 
+            see commit 6a22a98d78ee9cd203c33b0e1a339f84ab5aa849
+            was having trouble writing sed output to file
         Process process;
+        OutputStream userDocStream;
+        String scriptPath = script.getPath();
+        String masterTemplatePath = master.getPath();
+        String usersDocumentPath = usersDocument.getPath();
         if (isWindows) {
             process = Runtime.getRuntime()
-                    .exec(String.format("cmd.exe /c sed -i %s < %s > %s", script.getName(),
-                            master.getName(), usersDocument.getName()));
+                    .exec(String.format("cmd.exe /c sed -f %s %s", scriptPath,
+                            masterTemplatePath));
+            usersDocument.setWritable(true);
+            userDocStream = process.getOutputStream();
+            userDocStream.write(userDocStream.toString().getBytes());
         }
         else {
             process = Runtime.getRuntime()
-                    .exec(String.format("sh -c sed -i %s < %s > %s", script.getName(),
-                            master.getName(), usersDocument.getName()));
+                    .exec(String.format("sh -c sed -f %s %s > %s", script.getPath(),
+                            master.getPath(), usersDocument.getPath()));
         }
-        StreamGobbler streamGobbler;
-        streamGobbler = new StreamGobbler(process.getInputStream(),
-                System.out::println);
-        Executors.newSingleThreadExecutor().submit(streamGobbler);
+        //StreamGobbler streamGobbler;
+        //streamGobbler = new StreamGobbler(process.getInputStream(),
+        //        System.out::println);
+        //Executors.newSingleThreadExecutor().submit(streamGobbler);
         int exitCode = process.waitFor();
-        assert exitCode == 0;
+        //assert exitCode == 0; 
+        */
     }
 }

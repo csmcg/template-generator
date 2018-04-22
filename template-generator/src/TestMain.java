@@ -23,7 +23,6 @@ public class TestMain {
         
         ScriptEditor script = new ScriptEditor();
         File myDocument = new File("C:\\Users\\Connor\\Desktop\\mydoc.tex");
-        myDocument.createNewFile();
         File master = new File("C:\\Users\\Connor\\School\\333\\Team\\code\\template-generator\\template-generator\\masterTemplate.tex");
         
         

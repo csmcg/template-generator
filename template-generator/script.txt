@@ -1,8 +1,8 @@
-"s@_USRTITLE_@'Test Title'@g"
-"s@_COURSECODE_@'EE123'@g"
-"s@_ASSIGNMENT_@'Test Assignment'@g"
-"s@_COURSENAME_@'Test Course'@g"
-"s@_SCHOOL_@'Test School'@g"
-"s@_DEPARTMENT_@'Test Department'@g"
-"s@_SUBDATE_@'Test Sub Date'@g"
-"s@_EXPDATE_@'Test Exp Date'@g"
+s@_USRTITLE_@Test Title@g
+s@_COURSECODE_@EE123@g
+s@_ASSIGNMENT_@Test Assignment@g
+s@_COURSENAME_@Test Course@g
+s@_SCHOOL_@Test School@g
+s@_DEPARTMENT_@Test Department@g
+s@_SUBDATE_@Test Sub Date@g
+s@_EXPDATE_@Test Exp Date@g
