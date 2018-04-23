@@ -135,7 +135,6 @@ public class ScriptEditor {
             try {
                 p.waitFor();
             } catch (InterruptedException ie) {
-                
             }
 
                     
