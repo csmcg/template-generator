@@ -14,8 +14,7 @@ import java.nio.file.Path;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
+
         
 enum FORMAT {
     TEX, RTF
@@ -38,6 +37,9 @@ public class ScriptEditor {
     public static final String TAG_SCHOOL          = "_SCHOOL_";
     public static final String TAG_TEAM            = "_TEAMMEMBERS_";
     public static final String TAG_SECTIONS        = "_SECTIONTREE_";
+    public static final String TAG_MEMO_TO         = "_TO_";
+    public static final String TAG_MEMO_FROM       = "_FROM_";
+    public static final String TAG_MEMO_DATE       = "_DATE_";
     
     boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
     String userDir = System.getProperty("user.dir");
