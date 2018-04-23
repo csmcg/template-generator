@@ -9,11 +9,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.List;
-
         
 enum FORMAT {
     TEX, RTF
@@ -43,14 +42,15 @@ public class ScriptEditor {
     /* File where sed scripts will be written to eventually be executed on
        a master template. */
     private FileOutputStream scriptStream;
-    //private UserDoc          userInfo;
     private File             script;
 
     
     public ScriptEditor() {
         
         try {
-            script = new File(System.getProperty("user.dir") + "/sedscript.txt");
+            script = new File(userDir + 
+                              File.separator + 
+                              "sedscript.txt");
             
             if (!script.exists())
                 script.createNewFile();
@@ -93,13 +93,77 @@ public class ScriptEditor {
      * Executes sed script on master template. 
      * 
      * @param format
-     * @param usersDocument 
-     * @param saveOutputPath 
+     * @param usrSaveLoc
+     * @return 
      * @throws java.io.IOException 
      * @throws java.lang.InterruptedException 
      */
-    public void runScript(FORMAT format, File usersDocumentName, String saveOutputPath) throws IOException, InterruptedException {
+    public File runScript(FORMAT format, File usrSaveLoc) throws IOException, InterruptedException {
         
+        String ls = File.separator;
+        ArrayList<String> sed = new ArrayList();
+        
+        // get full path of script file
+        String scriptPath = script.getAbsolutePath();
+        // get full path of the master template
+        String masterTemplatePath = null;
+        if (format == FORMAT.TEX) {
+            masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                                        ls + "masterTemplate" + ".tex";
+        } if (format == FORMAT.RTF) {
+            masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                                        ls + "masterTemplate" + ".rtf";
+        }
+
+        // copy the master template to another file
+        File masterCopy = new File(userDir + ls + "masterCopy.txt");
+        
+        copyFile(new File(masterTemplatePath), masterCopy);
+
+        /* build the str array sed command that execs the script file on the
+           COPY of the master template
+        */
+        if (isWindows) {
+            Process p = Runtime.getRuntime().exec(String
+                    .format("cmd.exe /c sed -r -f %s -i %s",
+                    script.getAbsolutePath(), masterCopy.getAbsolutePath()));
+        }
+        else {
+            Process p = Runtime.getRuntime().exec(String
+                    .format("sh -c sed -r -f %s -i %s",
+                            script.getAbsolutePath(), masterCopy
+                                                      .getAbsolutePath()));
+        }
+        
+        //Files.copy(masterCopy, usrSaveLoc, StandardCopyOption.REPLACE_EXISTING);
+        //Files.copy(masterCopy.toPath(), usrSaveLoc.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+        return masterCopy;
+
+        
+/*        sed.add("sed");
+        sed.add("-r");
+        sed.add("-f");
+        sed.add(script.getPath());
+        sed.add("-i");
+        sed.add(masterCopy.getPath());
+        
+        masterCopy.setWritable(true);
+
+        // run the sed process
+/*        ProcessBuilder pb;
+        pb = new ProcessBuilder(sed);
+        int exitCode = pb.start().waitFor();
+*/
+        
+        // copy the copy of the master template and save to the user's save location
+        //if (exitCode == 0) {
+        //copyFile(masterCopy, new File(usrSaveLoc.toString() + ls + usrFilename.toString() + ".tex"));
+     //   }
+        
+        
+
+/*        
         ProcessBuilder p;
         String scriptPath = script.getPath();
         String masterTemplatePath = null;
@@ -141,33 +205,30 @@ public class ScriptEditor {
         int exitCode = p.start().waitFor();
 
         copyFile(usersDocumentName, new File(saveOutputPath + "\\" + usersDocumentName.getPath()));
-        
+*/        
     }
     
     /**
-     * Taken from: https://stackoverflow.com/questions/106770/standard-concise-way-to-copy-a-file-in-java/115086#115086
+     * Taken from: https://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
      * 
      * 
-     * @param sourceFile
-     * @param destFile
+     * @param source
+     * @param dest
      * @throws IOException 
      */
-    public void copyFile(File sourceFile, File destFile) throws IOException {
-        if(!destFile.exists()) {
-            destFile.createNewFile();
-        }
-        
+    public void copyFile(File source, File dest) throws IOException {
 
-        
-        FileChannel source = null;
-        FileChannel destination = null;
-        
+        FileChannel inputChannel = null;
+        FileChannel outputChannel = null;
+
         try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
+            inputChannel = new FileInputStream(source).getChannel();
+            outputChannel = new FileOutputStream(dest).getChannel();
+            outputChannel.transferFrom(inputChannel, 0, inputChannel.size());
         } finally {
-
+            inputChannel.close();
+            outputChannel.close();
         }
     }
+
 }

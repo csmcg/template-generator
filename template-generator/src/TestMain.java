@@ -1,6 +1,10 @@
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 
 /*
@@ -24,7 +28,16 @@ public class TestMain {
         ScriptEditor script = new ScriptEditor();
         //String templatePath = "templates/";
         String userDir = System.getProperty("user.dir");
-        File userDocumentName = new File("mydoc.tex");
+        //File userDocumentName = new File("mydoc.tex");
+        String ls = File.separator;
+        
+        
+        // user's name for their document
+        String usrDocName = "myDocument";
+        // desired location for user's doc to be saved
+        File usrSaveLoc = new File("C:" + ls + "Users" + ls + "Connor" + ls
+                                   + "School" + ls + "myReport.tex");
+        
         
         
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");
@@ -36,8 +49,9 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, "Test Sub Date");
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
         
-        script.runScript(FORMAT.TEX, userDocumentName, "C:\\Users\\Connor\\Documents");
-        
+        File userDoc = script.runScript(FORMAT.TEX, usrSaveLoc);
+
+
 
     }
     
