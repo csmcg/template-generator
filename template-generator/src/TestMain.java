@@ -28,19 +28,10 @@ public class TestMain {
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         
-        ScriptEditor script = new ScriptEditor();
-        //String templatePath = "templates/";
-        String userDir = System.getProperty("user.dir");
-        //File userDocumentName = new File("mydoc.tex");
-        String ls = File.separator;
+        ScriptEditor script = new ScriptEditor(); // create scripteditor object
+        String userDir = System.getProperty("user.dir"); // get the user directory 
+        String ls = File.separator; // the OS 
         
-        
-        // user's name for their document
-        // desired location for user's doc to be saved
-//        File usrSaveLoc = new File("C:" + ls + "Users" + ls + "Connor" + ls
-//                                   + "School" + ls + "myReport.tex");
-
-
         Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.tex");
         try {
             usrDocPath = Files.createFile(usrDocPath);
@@ -58,7 +49,7 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
         
         
-        Path userDoc = script.runScript(FORMAT.TEX, usrDocPath);
+        Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.TEX, usrDocPath);
         try {
             Files.deleteIfExists(usrDocPath);
             Files.copy(userDoc, usrDocPath, StandardCopyOption.COPY_ATTRIBUTES);

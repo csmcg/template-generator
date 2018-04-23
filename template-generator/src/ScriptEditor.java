@@ -19,6 +19,9 @@ import java.nio.file.StandardCopyOption;
 enum FORMAT {
     TEX, RTF
 }
+enum TEMPLATE {
+    FORMAL, INFORMAL
+}
 
 /**
  *
@@ -40,6 +43,7 @@ public class ScriptEditor {
     public static final String TAG_MEMO_TO         = "_TO_";
     public static final String TAG_MEMO_FROM       = "_FROM_";
     public static final String TAG_MEMO_DATE       = "_DATE_";
+    public static final String TAG_MEMO_SUBJECT    = "_SUBJECT_";
     
     boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
     String userDir = System.getProperty("user.dir");
@@ -97,13 +101,14 @@ public class ScriptEditor {
     /**
      * Executes sed script on master template. 
      * 
+     * @param template
      * @param format
      * @param usrSaveLoc
      * @return 
      * @throws java.io.IOException 
      * @throws java.lang.InterruptedException 
      */
-    public Path runScript(FORMAT format, Path usrSaveLoc) throws IOException, InterruptedException {
+    public Path runScript(TEMPLATE template, FORMAT format, Path usrSaveLoc) throws IOException, InterruptedException {
         
         String ls = File.separator;
         //ArrayList<String> sed = new ArrayList();
@@ -112,12 +117,24 @@ public class ScriptEditor {
         String scriptPath = script.getAbsolutePath();
         // get full path of the master template
         String masterTemplatePath = null;
-        if (format == FORMAT.TEX) {
-            masterTemplatePath = userDir + ls + "src" + ls + "templates" +
-                                        ls + "masterTemplate" + ".tex";
-        } if (format == FORMAT.RTF) {
-            masterTemplatePath = userDir + ls + "src" + ls + "templates" +
-                                        ls + "masterTemplate" + ".rtf";
+        
+        if (template == TEMPLATE.FORMAL) {
+            if (format == FORMAT.TEX) {
+                masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                        ls + "FormalMasterTemplate" + ".tex";
+            } if (format == FORMAT.RTF) {
+                masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                        ls + "InformalMasterTemplate" + ".rtf";
+            }
+        }
+        else if (template == TEMPLATE.INFORMAL) {
+            if (format == FORMAT.TEX) {
+                masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                        ls + "InformalMasterTemplate" + ".tex";
+            } if (format == FORMAT.RTF) {
+                masterTemplatePath = userDir + ls + "src" + ls + "templates" +
+                        ls + "InformalMasterTemplate" + ".rtf";
+            }            
         }
 
         // copy the master template to another file
@@ -148,8 +165,6 @@ public class ScriptEditor {
                             script.getAbsolutePath(), masterCopy.toString()));
         }
         
-        //Files.copy(masterCopy, usrSaveLoc, StandardCopyOption.REPLACE_EXISTING);
-        //Files.copy(masterCopy.toPath(), usrSaveLoc.toPath(), StandardCopyOption.REPLACE_EXISTING);
         masterCopy = Paths.get(userDir + ls + "masterCopy.txt");
         return masterCopy;
     }
