@@ -10,9 +10,12 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
         
 enum FORMAT {
     TEX, RTF
@@ -98,10 +101,10 @@ public class ScriptEditor {
      * @throws java.io.IOException 
      * @throws java.lang.InterruptedException 
      */
-    public File runScript(FORMAT format, File usrSaveLoc) throws IOException, InterruptedException {
+    public Path runScript(FORMAT format, Path usrSaveLoc) throws IOException, InterruptedException {
         
         String ls = File.separator;
-        ArrayList<String> sed = new ArrayList();
+        //ArrayList<String> sed = new ArrayList();
         
         // get full path of script file
         String scriptPath = script.getAbsolutePath();
@@ -116,96 +119,38 @@ public class ScriptEditor {
         }
 
         // copy the master template to another file
-        File masterCopy = new File(userDir + ls + "masterCopy.txt");
+        Path masterCopy = Paths.get(userDir + ls + "masterCopy.txt");
         
-        copyFile(new File(masterTemplatePath), masterCopy);
+        //copyFile(new File(masterTemplatePath), masterCopy);
+        Files.copy(Paths.get(masterTemplatePath), masterCopy, StandardCopyOption.REPLACE_EXISTING);
 
         /* build the str array sed command that execs the script file on the
            COPY of the master template
         */
+
         if (isWindows) {
-            Process p = Runtime.getRuntime().exec(String
-                    .format("cmd.exe /c sed -r -f %s -i %s",
-                    script.getAbsolutePath(), masterCopy.getAbsolutePath()));
+            String sed = String.format("cmd.exe /c sed -r -f %s -i %s", script.getAbsolutePath(), masterCopy.toString().replace("/", "\\"));
+            Process p = Runtime.getRuntime().exec(sed);
+                        //script.getAbsolutePath(), masterCopy.getAbsolutePath()));
+            try {
+                p.waitFor();
+            } catch (InterruptedException ie) {
+                
+            }
+
+                    
         }
         else {
             Process p = Runtime.getRuntime().exec(String
                     .format("sh -c sed -r -f %s -i %s",
-                            script.getAbsolutePath(), masterCopy
-                                                      .getAbsolutePath()));
+                            //script.getAbsolutePath(), masterCopy.getAbsolutePath()));
+                            script.getAbsolutePath(), masterCopy.toString()));
         }
         
         //Files.copy(masterCopy, usrSaveLoc, StandardCopyOption.REPLACE_EXISTING);
         //Files.copy(masterCopy.toPath(), usrSaveLoc.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
+        masterCopy = Paths.get(userDir + ls + "masterCopy.txt");
         return masterCopy;
-
-        
-/*        sed.add("sed");
-        sed.add("-r");
-        sed.add("-f");
-        sed.add(script.getPath());
-        sed.add("-i");
-        sed.add(masterCopy.getPath());
-        
-        masterCopy.setWritable(true);
-
-        // run the sed process
-/*        ProcessBuilder pb;
-        pb = new ProcessBuilder(sed);
-        int exitCode = pb.start().waitFor();
-*/
-        
-        // copy the copy of the master template and save to the user's save location
-        //if (exitCode == 0) {
-        //copyFile(masterCopy, new File(usrSaveLoc.toString() + ls + usrFilename.toString() + ".tex"));
-     //   }
-        
-        
-
-/*        
-        ProcessBuilder p;
-        String scriptPath = script.getPath();
-        String masterTemplatePath = null;
-        
-        if (format == FORMAT.TEX) {
-            masterTemplatePath =  userDir + "\\src\\templates\\masterTemplate.tex";
-        }
-        else if (format == FORMAT.RTF) {
-            masterTemplatePath = "/src/templates/masterTemplate.rtf";
-        }
-
-        List<String> cmd = new ArrayList();
-        copyFile(new File(masterTemplatePath), usersDocumentName);
-        String usersDocumentPath = userDir + "\\" + usersDocumentName.getPath();
-
-
-        if (isWindows) {
-            cmd.add("cmd.exe");
-            cmd.add("/c");
-            cmd.add("sed");
-            cmd.add("-r");
-            cmd.add("-f");
-            cmd.add(scriptPath);
-            cmd.add("-i");
-        }
-        else {
-            cmd.add("sh"); 
-            cmd.add("-c");
-            cmd.add("sed");
-            cmd.add("-r");            
-            cmd.add("-f");
-            cmd.add(scriptPath);
-            cmd.add("-i");            
-        }
-        
-        cmd.add(usersDocumentPath);
-        p = new ProcessBuilder(cmd);
-        //p.directory(new File(System.getProperty("user.dir")));
-        int exitCode = p.start().waitFor();
-
-        copyFile(usersDocumentName, new File(saveOutputPath + "\\" + usersDocumentName.getPath()));
-*/        
     }
     
     /**

@@ -1,10 +1,13 @@
 
+import com.sun.javafx.sg.prism.NGCanvas;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import sun.security.pkcs11.P11TlsKeyMaterialGenerator;
 
 
 /*
@@ -33,12 +36,17 @@ public class TestMain {
         
         
         // user's name for their document
-        String usrDocName = "myDocument";
         // desired location for user's doc to be saved
-        File usrSaveLoc = new File("C:" + ls + "Users" + ls + "Connor" + ls
-                                   + "School" + ls + "myReport.tex");
-        
-        
+//        File usrSaveLoc = new File("C:" + ls + "Users" + ls + "Connor" + ls
+//                                   + "School" + ls + "myReport.tex");
+
+
+        Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.tex");
+        try {
+            usrDocPath = Files.createFile(usrDocPath);
+        } catch (FileAlreadyExistsException faeex) {
+            
+        }
         
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");
         script.newCommand(ScriptEditor.TAG_COURSE_CODE, "EE123");
@@ -49,9 +57,14 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, "Test Sub Date");
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
         
-        File userDoc = script.runScript(FORMAT.TEX, usrSaveLoc);
+        
+        Path userDoc = script.runScript(FORMAT.TEX, usrDocPath);
+        try {
+            Files.deleteIfExists(usrDocPath);
+            Files.copy(userDoc, usrDocPath, StandardCopyOption.COPY_ATTRIBUTES);
+        } catch (FileAlreadyExistsException faeex) {
 
-
+        }
 
     }
     
