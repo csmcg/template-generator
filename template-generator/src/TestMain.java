@@ -32,14 +32,9 @@ public class TestMain {
         String userDir = System.getProperty("user.dir"); // get the user directory 
         String ls = File.separator; // the OS 
         
-        Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.tex");
-        try {
-            usrDocPath = Files.createFile(usrDocPath);
-        } catch (FileAlreadyExistsException faeex) {
-            
-        }
 
-        /* formal
+        // formal
+        Headings h = new Headings(TEMPLATE.FORMAL);
         script.newCommand(ScriptEditor.TAG_TITLE, "Test Title");
         script.newCommand(ScriptEditor.TAG_COURSE_CODE, "EE123");
         script.newCommand(ScriptEditor.TAG_ASSIGNMENT, "Test Assignment");
@@ -48,18 +43,38 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_DEPARTMENT, "Test Department");
         script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, "Test Sub Date");
         script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, "Test Exp Date");
-        */
+        //script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatTeX());
+        script.newCommand(ScriptEditor.TAG_TOC, h.formatRTFToC());
+        script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatRTF());
+        
         
         // informal
+        /* 
         script.newCommand(ScriptEditor.TAG_MEMO_TO, "Dr. David Green");
         script.newCommand(ScriptEditor.TAG_MEMO_FROM, "Team 6");
         script.newCommand(ScriptEditor.TAG_MEMO_DATE, "23 April 2018");
         script.newCommand(ScriptEditor.TAG_MEMO_SUBJECT, "This is a test");
+        */
+        
+        /*
+        Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.tex");
+        try {
+            usrDocPath = Files.createFile(usrDocPath);
+        } catch (FileAlreadyExistsException faeex) {
+            
+        }*/
 
         
+        Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.rtf");
+        try {
+            usrDocPath = Files.createFile(usrDocPath);
+        } catch (FileAlreadyExistsException faeex) {
+            
+        }
+        
         //Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.TEX, usrDocPath);
-        Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.TEX, usrDocPath);
-        //Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.RTF, usrDocPath);
+        //Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.TEX, usrDocPath);
+        Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.RTF, usrDocPath);
         //Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.RTF, usrDocPath);
 
         try {

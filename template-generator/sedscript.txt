@@ -1,0 +1,10 @@
+s@_USRTITLE_@Test Title@g
+s@_COURSECODE_@EE123@g
+s@_ASSIGNMENT_@Test Assignment@g
+s@_COURSENAME_@Test Course@g
+s@_SCHOOL_@Test School@g
+s@_DEPARTMENT_@Test Department@g
+s@_SUBDATE_@Test Sub Date@g
+s@_EXPDATE_@Test Exp Date@g
+s@_TOC_@\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b INTRODUCTION\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b THEORY\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b METHODS\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b0 Experimental Procedure\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b0 Experimental Apparatus\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b0 Material List\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b RESULTS\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b DISCUSSION\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b CONCLUSION\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b REFERENCES\\tab 1\\par\\pard\\sa200\\sl360\\slmult1\\tldot\\tx8000\\b APPENDIX\\tab 1\\par@g
+s@_SECTIONTREE_@\\pard\\sa200\\sl360\\slmult1\\qc\\b INTRODUCTION\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b THEORY\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b METHODS\\par\\pard\\sa200\\sl360\\slmult1\\i Experimental Procedure\\par\\i0\\pard\\sa200\\sl360\\slmult1\\i Experimental Apparatus\\par\\i0\\pard\\sa200\\sl360\\slmult1\\i Material List\\par\\i0\\pard\\sa200\\sl360\\slmult1\\qc\\b RESULTS\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b DISCUSSION\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b CONCLUSION\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b REFERENCES\\par\\pard\\sa200\\sl360\\slmult1\\qc\\b APPENDIX\\par@g

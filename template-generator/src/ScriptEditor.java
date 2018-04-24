@@ -15,13 +15,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-        
-enum FORMAT {
-    TEX, RTF
-}
-enum TEMPLATE {
-    FORMAL, INFORMAL
-}
 
 /**
  *
@@ -44,8 +37,11 @@ public class ScriptEditor {
     public static final String TAG_MEMO_FROM       = "_FROM_";
     public static final String TAG_MEMO_DATE       = "_DATE_";
     public static final String TAG_MEMO_SUBJECT    = "_SUBJECT_";
+    public static final String TAG_TOC             = "_TOC_";
     
-    boolean isWindows = System.getProperty("os.name").toLowerCase().contains("windows");
+    boolean isWindows = System.getProperty("os.name").toLowerCase()
+                                                     .contains("windows");
+
     String userDir = System.getProperty("user.dir");
     
     /* File where sed scripts will be written to eventually be executed on
@@ -53,30 +49,30 @@ public class ScriptEditor {
     private FileOutputStream scriptStream;
     private File             script;
 
-    
+    /**
+     * 
+     */
     public ScriptEditor() {
-        
         try {
             script = new File(userDir + 
                               File.separator + 
                               "sedscript.txt");
-            
             if (!script.exists())
                 script.createNewFile();
-            
             scriptStream = new FileOutputStream(script);
-            
         } catch (IOException ex) {
             System.out.println(ex);
         }
-        
-        //this.userInfo = template;
-
     }
     
+    /**
+     * 
+     * @param templateField
+     * @param userField
+     * @throws IOException 
+     */
     public void newCommand(String templateField, String userField) throws IOException {
         String cmd;
-        
         /* The sed substitution command  */
         cmd = String.format("s@%s@%s@g\n", templateField, userField);
         scriptStream.write(cmd.getBytes());
@@ -88,15 +84,9 @@ public class ScriptEditor {
      */
     public void deleteScript() throws IOException {
         script.delete();
-        //this.script = new File("script.txt");
         scriptStream.flush();
         scriptStream.close();
     }
-
-    /*
-    public void makeHeaders(HeadingTree headers) {
-        
-    }*/
     
     /**
      * Executes sed script on master template. 
@@ -111,7 +101,6 @@ public class ScriptEditor {
     public Path runScript(TEMPLATE template, FORMAT format, Path usrSaveLoc) throws IOException, InterruptedException {
         
         String ls = File.separator;
-        //ArrayList<String> sed = new ArrayList();
         
         // get full path of script file
         String scriptPath = script.getAbsolutePath();
@@ -124,7 +113,7 @@ public class ScriptEditor {
                         ls + "FormalMasterTemplate" + ".tex";
             } if (format == FORMAT.RTF) {
                 masterTemplatePath = userDir + ls + "src" + ls + "templates" +
-                        ls + "InformalMasterTemplate" + ".rtf";
+                        ls + "FormalMasterTemplate" + ".rtf";
             }
         }
         else if (template == TEMPLATE.INFORMAL) {
@@ -154,7 +143,7 @@ public class ScriptEditor {
             try {
                 p.waitFor();
             } catch (InterruptedException ie) {
-            }
+        }
 
                     
         }
