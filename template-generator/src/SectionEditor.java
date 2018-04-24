@@ -1,21 +1,30 @@
+
+import javax.swing.DefaultListModel;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 
-
 /**
  *
- * @author colli
+ * @author Malik Midani mikex535@uab.edu
  */
 public class SectionEditor extends javax.swing.JFrame {
+
+    private DefaultListModel headingModel;
+    private DefaultListModel subheadingModel;
+    private Headings h;
 
     /**
      * Creates new form SectionEditor
      */
     public SectionEditor() {
+        h = new Headings(1);
         initComponents();
+        
+        
     }
 
     /**
@@ -27,177 +36,303 @@ public class SectionEditor extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        headingModel = new DefaultListModel();
+        buildHeadingList();
+        headingList = new javax.swing.JList<>(headingModel);
         jScrollPane2 = new javax.swing.JScrollPane();
-        headingsList = new javax.swing.JList<>();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        subHeadingList = new javax.swing.JList<>();
-        headingsLabel = new javax.swing.JLabel();
-        subHeadingLabel = new javax.swing.JLabel();
-        headingMoveUpButton = new javax.swing.JButton();
-        headingMoveDownButton = new javax.swing.JButton();
-        subHeadingMoveDownButton = new javax.swing.JButton();
-        subHeadingMoveUpButton = new javax.swing.JButton();
-        newHeadingTextbox = new javax.swing.JTextField();
-        newHeadingLabel = new javax.swing.JLabel();
-        headingAddButton = new javax.swing.JButton();
-        newSubHeadingLabel = new javax.swing.JLabel();
-        newSubHeadingTextbox = new javax.swing.JTextField();
-        subHeadingAddButton = new javax.swing.JButton();
-        cancelButton = new javax.swing.JButton();
-        applyButton = new javax.swing.JButton();
-        headingRemoveButton = new javax.swing.JButton();
-        subHeadingRemoveButton = new javax.swing.JButton();
+        subheadingModel = new DefaultListModel();
+        subheadingList = new javax.swing.JList<>(subheadingModel);
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        headingDown = new javax.swing.JButton();
+        headingUp = new javax.swing.JButton();
+        newHeading = new javax.swing.JTextField();
+        headingAdd = new javax.swing.JButton();
+        headingRemove = new javax.swing.JButton();
+        subheadingDown = new javax.swing.JButton();
+        subheadingUp = new javax.swing.JButton();
+        newSubheading = new javax.swing.JTextField();
+        subheadingAdd = new javax.swing.JButton();
+        subheadingRemove = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Section Editor");
-        setSize(new java.awt.Dimension(700, 0));
 
-        headingsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Abstract", "Introduction", "Theory", "Methods", "Results", "Disscusion ", "Conclusion", "Reference", "Apendix" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
+        headingList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        headingList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                headingListValueChanged(evt);
+            }
         });
-        jScrollPane2.setViewportView(headingsList);
+        jScrollPane1.setViewportView(headingList);
 
-        jScrollPane3.setViewportView(subHeadingList);
+        jScrollPane2.setViewportView(subheadingList);
 
-        headingsLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        headingsLabel.setText("Headings:");
+        jLabel1.setText("Headings:");
 
-        subHeadingLabel.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        subHeadingLabel.setText("Sub Headings:");
+        jLabel2.setText("Subheadings for selected heading:");
 
-        headingMoveUpButton.setText("Move Up");
-        headingMoveUpButton.addActionListener(new java.awt.event.ActionListener() {
+        headingDown.setText("Move Down");
+        headingDown.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                headingMoveUpButtonActionPerformed(evt);
+                headingDownActionPerformed(evt);
             }
         });
 
-        headingMoveDownButton.setText("Move Down");
-
-        subHeadingMoveDownButton.setText("Move Down");
-
-        subHeadingMoveUpButton.setLabel("Move Up");
-
-        newHeadingLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        newHeadingLabel.setText("New Heading:");
-
-        headingAddButton.setText("Add");
-        headingAddButton.addActionListener(new java.awt.event.ActionListener() {
+        headingUp.setText("Move Up");
+        headingUp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                headingAddButtonActionPerformed(evt);
+                headingUpActionPerformed(evt);
             }
         });
 
-        newSubHeadingLabel.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        newSubHeadingLabel.setText("New Sub Heading:");
+        newHeading.setToolTipText("");
+        newHeading.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                newHeadingActionPerformed(evt);
+            }
+        });
 
-        subHeadingAddButton.setText("Add");
+        headingAdd.setText("Add");
+        headingAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                headingAddActionPerformed(evt);
+            }
+        });
 
-        cancelButton.setText("Cancel");
+        headingRemove.setText("Remove");
+        headingRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                headingRemoveActionPerformed(evt);
+            }
+        });
 
-        applyButton.setText("Apply");
+        subheadingDown.setText("Move Down");
+        subheadingDown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subheadingDownActionPerformed(evt);
+            }
+        });
 
-        headingRemoveButton.setText("Remove");
+        subheadingUp.setText("Move Up");
+        subheadingUp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subheadingUpActionPerformed(evt);
+            }
+        });
 
-        subHeadingRemoveButton.setLabel("Remove");
+        newSubheading.setToolTipText("");
+
+        subheadingAdd.setText("Add");
+        subheadingAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subheadingAddActionPerformed(evt);
+            }
+        });
+
+        subheadingRemove.setText("Remove");
+        subheadingRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                subheadingRemoveActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(49, 49, 49)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(subHeadingLabel)
-                    .addComponent(headingsLabel)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane2)
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(newHeadingLabel)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(subHeadingMoveUpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                                .addComponent(subHeadingMoveDownButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
-                            .addComponent(newSubHeadingLabel)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                    .addComponent(newSubHeadingTextbox, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                    .addComponent(newHeadingTextbox, javax.swing.GroupLayout.Alignment.LEADING))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(headingAddButton)
-                                    .addComponent(subHeadingAddButton)))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(headingRemoveButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(headingMoveUpButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
-                                .addComponent(headingMoveDownButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE))
-                            .addComponent(subHeadingRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(34, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(37, 37, 37)
-                .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(60, 60, 60))
+                                    .addComponent(newHeading, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(headingDown, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(headingUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(headingAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(headingRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(newSubheading, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(subheadingDown, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(subheadingUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(subheadingAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(subheadingRemove)))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(31, 31, 31)
-                .addComponent(headingsLabel)
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newHeading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(headingAdd))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(headingRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(headingUp)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(headingDown))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabel2)
+                .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(newHeadingLabel)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(newSubheading, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(subheadingAdd))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(newHeadingTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(headingAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(headingMoveUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(subheadingRemove)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 14, Short.MAX_VALUE)
+                        .addComponent(subheadingUp)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(headingMoveDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(headingRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(13, 13, 13)
-                .addComponent(subHeadingLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addComponent(newSubHeadingLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(newSubHeadingTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(subHeadingAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(subHeadingMoveUpButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(subHeadingMoveDownButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(subHeadingRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 24, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cancelButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(applyButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(22, 22, 22))
+                        .addComponent(subheadingDown))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void headingMoveUpButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingMoveUpButtonActionPerformed
+    private void headingUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingUpActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_headingMoveUpButtonActionPerformed
+        int i = headingList.getSelectedIndex();
+        if (i != 0){
+        Heading temp = h.getHeading(i);
+        h.setHeading(i, h.getHeading(i-1));
+        h.setHeading(i-1, temp);
+        headingModel.clear();
+        buildHeadingList();
+        headingList.setSelectedIndex(i-1);
+        }
+        
+    }//GEN-LAST:event_headingUpActionPerformed
 
-    private void headingAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingAddButtonActionPerformed
+    private void headingAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingAddActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_headingAddButtonActionPerformed
+        String s = newHeading.getText();
+        if (!"".equals(s)){
+            h.add(new Heading(s));
+        }
+        newHeading.setText("");
+        headingModel.clear();
+        buildHeadingList();
+        
+        
+    }//GEN-LAST:event_headingAddActionPerformed
+
+    private void subheadingUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingUpActionPerformed
+        // TODO add your handling code here:
+        if (headingList.getSelectedIndex() != -1){
+        int i = headingList.getSelectedIndex();
+        int j = subheadingList.getSelectedIndex();
+        if (j != 0){
+        Subheading temp = h.getHeading(i).getSH(j);
+        h.getHeading(i).setSH(j, h.getHeading(i).getSH(j-1));
+        h.getHeading(i).setSH(j-1, temp);
+        subheadingModel.clear();
+        buildSubheadingList(i);
+        subheadingList.setSelectedIndex(j-1);
+        }
+        }
+    }//GEN-LAST:event_subheadingUpActionPerformed
+
+    private void subheadingAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingAddActionPerformed
+        // TODO add your handling code here:
+        if (headingList.getSelectedIndex() != -1){
+        String s = newSubheading.getText();
+        if (!"".equals(s)){
+            h.getHeading(headingList.getSelectedIndex()).add(new Subheading(s));
+        }
+        newSubheading.setText("");
+        subheadingModel.clear();
+        buildSubheadingList(headingList.getSelectedIndex());
+        }
+    }//GEN-LAST:event_subheadingAddActionPerformed
+
+    private void headingDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingDownActionPerformed
+        // TODO add your handling code here:
+        int i = headingList.getSelectedIndex();
+        if (i != h.getCount()-1){
+        Heading temp = h.getHeading(i);
+        h.setHeading(i, h.getHeading(i+1));
+        h.setHeading(i+1, temp);
+        headingModel.clear();
+        buildHeadingList();
+        headingList.setSelectedIndex(i+1);
+        } 
+    }//GEN-LAST:event_headingDownActionPerformed
+
+    private void newHeadingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHeadingActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_newHeadingActionPerformed
+
+    private void headingRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingRemoveActionPerformed
+        // TODO add your handling code here:
+        h.remove(headingList.getSelectedIndex());
+        headingModel.clear();
+        buildHeadingList();
+        headingList.setSelectedIndex(-1);
+    }//GEN-LAST:event_headingRemoveActionPerformed
+
+    private void headingListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_headingListValueChanged
+        // TODO add your handling code here:
+        subheadingModel.clear();
+        int i = headingList.getSelectedIndex();
+        if (i != -1){
+            if (h.getHeading(i).getCount() != 0){
+                buildSubheadingList(i);
+            }
+        }
+    }//GEN-LAST:event_headingListValueChanged
+
+    private void subheadingRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingRemoveActionPerformed
+        // TODO add your handling code here:
+        if (headingList.getSelectedIndex() != -1){
+        h.getHeading(headingList.getSelectedIndex())
+                .remove(subheadingList.getSelectedIndex());
+        subheadingModel.clear();
+        buildSubheadingList(headingList.getSelectedIndex());
+        subheadingList.setSelectedIndex(-1);
+        }
+    }//GEN-LAST:event_subheadingRemoveActionPerformed
+
+    private void subheadingDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingDownActionPerformed
+        // TODO add your handling code here:
+        if (headingList.getSelectedIndex() != -1){
+        int i = headingList.getSelectedIndex();
+        int j = subheadingList.getSelectedIndex();
+        if (j != h.getHeading(i).getCount()-1){
+        Subheading temp = h.getHeading(i).getSH(j);
+        h.getHeading(i).setSH(j, h.getHeading(i).getSH(j+1));
+        h.getHeading(i).setSH(j+1, temp);
+        subheadingModel.clear();
+        buildSubheadingList(i);
+        subheadingList.setSelectedIndex(j+1);
+        }
+        }
+    }//GEN-LAST:event_subheadingDownActionPerformed
 
     /**
      * @param args the command line arguments
@@ -235,25 +370,38 @@ public class SectionEditor extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton applyButton;
-    private javax.swing.JButton cancelButton;
-    private javax.swing.JButton headingAddButton;
-    private javax.swing.JButton headingMoveDownButton;
-    private javax.swing.JButton headingMoveUpButton;
-    private javax.swing.JButton headingRemoveButton;
-    private javax.swing.JLabel headingsLabel;
-    private javax.swing.JList<String> headingsList;
+    private javax.swing.JButton headingAdd;
+    private javax.swing.JButton headingDown;
+    private javax.swing.JList<String> headingList;
+    private javax.swing.JButton headingRemove;
+    private javax.swing.JButton headingUp;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JLabel newHeadingLabel;
-    private javax.swing.JTextField newHeadingTextbox;
-    private javax.swing.JLabel newSubHeadingLabel;
-    private javax.swing.JTextField newSubHeadingTextbox;
-    private javax.swing.JButton subHeadingAddButton;
-    private javax.swing.JLabel subHeadingLabel;
-    private javax.swing.JList<String> subHeadingList;
-    private javax.swing.JButton subHeadingMoveDownButton;
-    private javax.swing.JButton subHeadingMoveUpButton;
-    private javax.swing.JButton subHeadingRemoveButton;
+    private javax.swing.JTextField newHeading;
+    private javax.swing.JTextField newSubheading;
+    private javax.swing.JButton subheadingAdd;
+    private javax.swing.JButton subheadingDown;
+    private javax.swing.JList<String> subheadingList;
+    private javax.swing.JButton subheadingRemove;
+    private javax.swing.JButton subheadingUp;
     // End of variables declaration//GEN-END:variables
+    
+    private void buildHeadingList(){
+        
+        for (int i=0;i<h.getCount();i++){
+            headingModel.addElement(h.getHeading(i).getName());
+        }
+        
+    }
+    
+    private void buildSubheadingList(int hIndex){
+        
+        for (int i=0;i< h.getHeading(hIndex).getCount() ;i++){
+            subheadingModel.addElement(h.getHeading(hIndex).getSH(i).getName());
+        }
+    }
 }
+
+

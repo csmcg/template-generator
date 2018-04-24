@@ -109,19 +109,19 @@
           <Group type="102" alignment="0" attributes="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="formalTagPannel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="formalTagPannel" min="-2" pref="90" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="titleLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="11" max="-2" attributes="0"/>
-                      <Component id="titleTextbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="titleTextbox" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="assignmentLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="assignmentTextbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="assignmentTextbox" min="-2" pref="30" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="courseNumberCodeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                      <Component id="courseNumberTextbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="courseNumberTextbox" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jPanel2" min="-2" pref="218" max="-2" attributes="0"/>
               </Group>
@@ -131,7 +131,7 @@
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="courseNameTextbox" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="courseNameTextbox" alignment="3" min="-2" pref="30" max="-2" attributes="0"/>
                           <Component id="experimentPerfomredOnLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -142,7 +142,7 @@
                           <Component id="year1Combo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="schoolTextbox" min="-2" max="-2" attributes="0"/>
+                      <Component id="schoolTextbox" min="-2" pref="30" max="-2" attributes="0"/>
                   </Group>
                   <Component id="submissionDateLabel" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -174,7 +174,7 @@
                   <Component id="generateButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="previousButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="84" max="32767" attributes="0"/>
+              <EmptySpace pref="69" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -232,7 +232,7 @@
                       <Component id="formalDepartmentTemplateTextbox" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="formalTemplateTextbox" alignment="0" min="-2" pref="250" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace pref="8" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -240,10 +240,10 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="formalDepartmentTemplateTextbox" min="-2" max="-2" attributes="0"/>
+                  <Component id="formalDepartmentTemplateTextbox" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="formalTemplateTextbox" min="-2" max="-2" attributes="0"/>
-                  <EmptySpace pref="12" max="32767" attributes="0"/>
+                  <Component id="formalTemplateTextbox" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -371,8 +371,9 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
+                          <EmptySpace min="-2" pref="4" max="-2" attributes="0"/>
                           <Component id="jScrollPane1" min="-2" pref="270" max="-2" attributes="0"/>
-                          <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Component id="sectionsEditButton" min="-2" pref="63" max="-2" attributes="0"/>
                       </Group>
                       <Group type="103" groupAlignment="1" max="-2" attributes="0">

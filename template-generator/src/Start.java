@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
+package gui;
 
 /**
  *
@@ -61,6 +61,11 @@ public class Start extends javax.swing.JFrame {
                 continueButtonActionPerformed(evt);
             }
         });
+        continueButton.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                continueButtonKeyPressed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,17 +117,27 @@ public class Start extends javax.swing.JFrame {
 
     private void continueButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_continueButtonActionPerformed
         // TODO add your handling code here:
+
     }//GEN-LAST:event_continueButtonActionPerformed
 
     private void selectDepartmentComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectDepartmentComboActionPerformed
         // TODO add your handling code here:
+         
     }//GEN-LAST:event_selectDepartmentComboActionPerformed
+
+    private void continueButtonKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_continueButtonKeyPressed
+        String department = (String) this.selectDepartmentCombo.getSelectedItem();
+        String format = (String) this.selectFormatCombo.getSelectedItem();
+   
+    }//GEN-LAST:event_continueButtonKeyPressed
 
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
+       
+        
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 

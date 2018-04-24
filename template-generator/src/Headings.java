@@ -9,8 +9,6 @@ import java.util.ArrayList;
  * Credits:  (if any for sections of code)
  */
 
-
-
 /**
  *
  * @author Malik Midani mikex535@uab.edu
@@ -35,7 +33,6 @@ public class Headings {
         hcount = 0;
         if (template == TEMPLATE.FORMAL){
             
-            //add1(new Heading("Abstract"));
             add1(new Heading("Introduction"));
             add1(new Heading("Theory"));
             add1(new Heading("Methods"));
