@@ -21,7 +21,7 @@ public class SectionEditor extends javax.swing.JFrame {
      * Creates new form SectionEditor
      */
     public SectionEditor() {
-        h = new Headings(1);
+        h = new Headings(TEMPLATE.FORMAL);
         initComponents();
         
         
