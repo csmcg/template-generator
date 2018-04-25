@@ -1,14 +1,15 @@
+/**
+ * File: SectionEditor.java
+ * Author: Malik Midani mikex535@uab.edu
+ * Assignment: Template Generator - EE333 Spring 2018 Team 5
+ * Vers: 1.0.0 04/20/2018 MM - initial coding
+ */
 
 import javax.swing.DefaultListModel;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-/**
- *
+/** 
+ * GUI for adding, removing, and moving headings and subheadings.
+ * 
  * @author Malik Midani mikex535@uab.edu
  */
 public class SectionEditor extends javax.swing.JFrame {
@@ -16,6 +17,8 @@ public class SectionEditor extends javax.swing.JFrame {
     private DefaultListModel headingModel;
     private DefaultListModel subheadingModel;
     private Headings h;
+    private Formal   f = null;
+    private Informal inf = null;
 
     /**
      * Creates new form SectionEditor
@@ -23,8 +26,29 @@ public class SectionEditor extends javax.swing.JFrame {
     public SectionEditor() {
         h = new Headings(TEMPLATE.FORMAL);
         initComponents();
-        
-        
+    }
+
+    /**
+     * Constructs the SectionEditor GUI for when called from the formal template.
+     * @param f GUI the sectioneditor is called from
+     * @param h the current heading tree
+     */
+    public SectionEditor(Formal f, Headings h) {
+        this.h = h;
+        this.f = f;
+        initComponents();
+    }
+    
+    /**
+     * Constructs the SectionEDitor GUI for when called from the informal template
+     * 
+     * @param inf GUI the sectioneditor was called from
+     * @param h the current heading tree
+     */
+    public SectionEditor(Informal inf, Headings h) {
+        this.h = h;
+        this.inf = inf;
+        initComponents();
     }
 
     /**
@@ -56,7 +80,12 @@ public class SectionEditor extends javax.swing.JFrame {
         subheadingAdd = new javax.swing.JButton();
         subheadingRemove = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         headingList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         headingList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
@@ -157,21 +186,23 @@ public class SectionEditor extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(newHeading, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(newHeading, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(headingAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(headingRemove)))
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(headingDown, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(headingUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(headingAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(headingRemove, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(newSubheading, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                         .addComponent(subheadingDown, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(subheadingUp, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 33, Short.MAX_VALUE)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(subheadingAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(subheadingRemove)))))))
@@ -215,6 +246,11 @@ public class SectionEditor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Moves the selected heading up the tree
+     * 
+     * @param evt 
+     */
     private void headingUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingUpActionPerformed
         // TODO add your handling code here:
         int i = headingList.getSelectedIndex();
@@ -229,6 +265,11 @@ public class SectionEditor extends javax.swing.JFrame {
         
     }//GEN-LAST:event_headingUpActionPerformed
 
+    /**
+     * Adds a heading to the tree
+     * 
+     * @param evt 
+     */
     private void headingAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingAddActionPerformed
         // TODO add your handling code here:
         String s = newHeading.getText();
@@ -238,10 +279,13 @@ public class SectionEditor extends javax.swing.JFrame {
         newHeading.setText("");
         headingModel.clear();
         buildHeadingList();
-        
-        
     }//GEN-LAST:event_headingAddActionPerformed
 
+    /**
+     * Moves a subheading up the list of subheadings under the selected heading
+     * 
+     * @param evt 
+     */
     private void subheadingUpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingUpActionPerformed
         // TODO add your handling code here:
         if (headingList.getSelectedIndex() != -1){
@@ -258,6 +302,10 @@ public class SectionEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_subheadingUpActionPerformed
 
+    /**
+     * Adds a subheading underneath the selected top level heading 
+     * @param evt 
+     */
     private void subheadingAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingAddActionPerformed
         // TODO add your handling code here:
         if (headingList.getSelectedIndex() != -1){
@@ -271,6 +319,10 @@ public class SectionEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_subheadingAddActionPerformed
 
+    /**
+     * Moves a top level heading (along with its child subheadings) down the tree
+     * @param evt 
+     */
     private void headingDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingDownActionPerformed
         // TODO add your handling code here:
         int i = headingList.getSelectedIndex();
@@ -284,10 +336,20 @@ public class SectionEditor extends javax.swing.JFrame {
         } 
     }//GEN-LAST:event_headingDownActionPerformed
 
+    /**
+     * Creates a new top level heading
+     * 
+     * @param evt 
+     */
     private void newHeadingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_newHeadingActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_newHeadingActionPerformed
 
+    /** 
+     * Removes a top level heading
+     * 
+     * @param evt 
+     */
     private void headingRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_headingRemoveActionPerformed
         // TODO add your handling code here:
         h.remove(headingList.getSelectedIndex());
@@ -296,6 +358,12 @@ public class SectionEditor extends javax.swing.JFrame {
         headingList.setSelectedIndex(-1);
     }//GEN-LAST:event_headingRemoveActionPerformed
 
+    /**
+     * Event handler for displaying the subheadings of the newly selected
+     * heading
+     * 
+     * @param evt 
+     */
     private void headingListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_headingListValueChanged
         // TODO add your handling code here:
         subheadingModel.clear();
@@ -307,6 +375,11 @@ public class SectionEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_headingListValueChanged
 
+    /**
+     * Removes the selected subheading
+     * 
+     * @param evt 
+     */
     private void subheadingRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingRemoveActionPerformed
         // TODO add your handling code here:
         if (headingList.getSelectedIndex() != -1){
@@ -318,6 +391,11 @@ public class SectionEditor extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_subheadingRemoveActionPerformed
 
+    /**
+     * Moves the selected subheading down
+     * 
+     * @param evt 
+     */
     private void subheadingDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_subheadingDownActionPerformed
         // TODO add your handling code here:
         if (headingList.getSelectedIndex() != -1){
@@ -333,6 +411,18 @@ public class SectionEditor extends javax.swing.JFrame {
         }
         }
     }//GEN-LAST:event_subheadingDownActionPerformed
+
+    /**
+     * Called when section editor GUI is closed
+     * @param evt 
+     */
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        if (f == null)
+            inf.updateSections();
+        else
+            f.updateSections();
+        this.dispose();
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments
@@ -388,6 +478,9 @@ public class SectionEditor extends javax.swing.JFrame {
     private javax.swing.JButton subheadingUp;
     // End of variables declaration//GEN-END:variables
     
+    /**
+     * Builds the list of headings
+     */
     private void buildHeadingList(){
         
         for (int i=0;i<h.getCount();i++){
@@ -396,6 +489,11 @@ public class SectionEditor extends javax.swing.JFrame {
         
     }
     
+    /**
+     * Builds the list of subheadings at the supplied heading index
+     * 
+     * @param hIndex index of heading whose subheadings should be displayed
+     */
     private void buildSubheadingList(int hIndex){
         
         for (int i=0;i< h.getHeading(hIndex).getCount() ;i++){

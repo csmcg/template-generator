@@ -1,22 +1,26 @@
-import java.util.ArrayList;
-
 /*
  * File: Headings.java
  * Author: Malik Midani mikex535@uab.edu
- * Assignment:  SEDproject - EE333 Spring 2018
+ * Assignment:  Template Generator - EE333 Spring 2018 Team 5
  * Vers: 1.0.0 04/20/2018 MM - initial coding
  *
  * Credits:  (if any for sections of code)
  */
 
+import java.util.ArrayList;
+
 /**
- *
+ * Headings objects contain trees of top-level headings that may or may not
+ * contain subheadings. The contents of the tree will be iterated throughout,
+ * turned into string that will replace the sections tag of the master templates.
+ * 
+ * 
  * @author Malik Midani mikex535@uab.edu
  */
 public class Headings {
     
-    private ArrayList<Heading> headings;
-    private int hcount;
+    private ArrayList<Heading> headings; // stores heading object
+    private int hcount; // number of headings
     
     public Headings(){
         headings = new ArrayList();
@@ -24,6 +28,8 @@ public class Headings {
     }
     
     /**
+     * Headings objects contain trees of top-level headings that may or may
+     * not contain subheadings. 
      *
      * @param template Paramater of enum type {@link TEMPLATE} that denotes
      * the default master template to fill the GUI/user document with. 
@@ -55,6 +61,8 @@ public class Headings {
     }
     
     /**
+     * Returns one string of the headings separated by newlines, with subheadings
+     * tabbed in.
      * 
      * @return {@link String} containing all document sections, separated by
      * newlines, with subheadings tabbed in below their respective headings.
@@ -150,35 +158,72 @@ public class Headings {
         return s;
     }
     
+    /**
+     * Adds a top level heading. 
+     * 
+     * @param h heading to be added to tree
+     */
     private void add1(Heading h){
         headings.add(h);
         hcount++;
     }
     
+    /**
+     * Adds a top level heading.
+     * 
+     * @param h heading to be added to tree
+     */
     public void add(Heading h){
         headings.add(h);
         hcount++;
     }
     
+    /**
+     * Removes the heading indicated by h. 
+     * 
+     * @param h heading to be removed
+     */
     public void remove(Heading h){
         headings.remove(h);
         hcount--;
     }
      
+    /**
+     * Removes the heading located at the supplied index.
+     * 
+     * @param index index of heading to be removed
+     */    
     public void remove(int index){
         headings.remove(index); 
         hcount--;
     }
      
-     
+    
+    /**
+     * Returns the heading indicated by the index
+     * 
+     * @param index index of heading to return
+     * @return the heading object located at the supplied index of the tree
+     */
     public Heading getHeading(int index){
         return headings.get(index);
     }
     
+    /**
+     * Sets the supplied heading at the supplied index.
+     * 
+     * @param index index to move heading to
+     * @param h heading to move
+     */
     public void setHeading(int index, Heading h){
         headings.set(index, h);
     }
     
+    /** 
+     * Returns number of headings in heading tree
+     * 
+     * @return number of headings in heading tree
+     */
     public int getCount(){
         return hcount;
     }

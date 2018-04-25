@@ -1,21 +1,49 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package gui;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
 
 /**
  *
  * @author colli
  */
 public class Formal extends javax.swing.JFrame {
+    
+    private TEMPLATE template;
+    private FORMAT   format;
+    private String   department;
+    private Headings h;
+    private ArrayList<String> authors;
+    private ArrayList<String> members;
+    private ScriptEditor      script;
 
     /**
      * Creates new form Formal
      */
     public Formal() {
         initComponents();
+    }
+    
+    public Formal(String department, TEMPLATE template) {
+        this.template = template;
+        this.department = department;
+
+        authors = new ArrayList<>();
+        members = new ArrayList<>();
+        
+        h = new Headings(TEMPLATE.FORMAL); // create the default heading tree
+        
+        initComponents(); 
+        
+        // set the 
     }
 
     /**
@@ -27,6 +55,9 @@ public class Formal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        buttonGroup3 = new javax.swing.ButtonGroup();
         titleTextbox = new javax.swing.JTextField();
         assignmentTextbox = new javax.swing.JTextField();
         courseNameTextbox = new javax.swing.JTextField();
@@ -40,18 +71,15 @@ public class Formal extends javax.swing.JFrame {
         courseNameLabel = new javax.swing.JLabel();
         schoolTextbox = new javax.swing.JTextField();
         schoolLabel = new javax.swing.JLabel();
-        authorCombo = new javax.swing.JComboBox<>();
         authorLabel = new javax.swing.JLabel();
-        labTeamMemberCombo = new javax.swing.JComboBox<>();
         labTeamMemberLabel = new javax.swing.JLabel();
         authorEditButton = new javax.swing.JButton();
         labTeamMemberEditButton = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        headingsList = new javax.swing.JList<>();
         sectionsLabel = new javax.swing.JLabel();
-        headingsLabel = new javax.swing.JLabel();
         sectionsEditButton = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        sectionArea = new javax.swing.JTextArea();
         month1Combo = new javax.swing.JComboBox<>();
         day1Combo = new javax.swing.JComboBox<>();
         year1Combo = new javax.swing.JComboBox<>();
@@ -60,10 +88,13 @@ public class Formal extends javax.swing.JFrame {
         day2combo = new javax.swing.JComboBox<>();
         year2Combo = new javax.swing.JComboBox<>();
         submissionDateLabel = new javax.swing.JLabel();
-        RTFCheckBox = new javax.swing.JCheckBox();
-        latexCheckBox = new javax.swing.JCheckBox();
         generateButton = new javax.swing.JButton();
-        previousButton = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        authorsTextArea = new javax.swing.JTextArea();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        membersTextArea = new javax.swing.JTextArea();
+        texButton = new javax.swing.JRadioButton();
+        rtfButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Template Generator");
@@ -93,7 +124,7 @@ public class Formal extends javax.swing.JFrame {
         formalTagPannel.setPreferredSize(new java.awt.Dimension(270, 70));
 
         formalDepartmentTemplateTextbox.setEditable(false);
-        formalDepartmentTemplateTextbox.setText("Electrical Engineering ");
+        formalDepartmentTemplateTextbox.setText(department);
         formalDepartmentTemplateTextbox.setPreferredSize(new java.awt.Dimension(250, 20));
         formalDepartmentTemplateTextbox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -113,7 +144,7 @@ public class Formal extends javax.swing.JFrame {
                 .addGroup(formalTagPannelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(formalDepartmentTemplateTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(formalTemplateTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(8, Short.MAX_VALUE))
         );
         formalTagPannelLayout.setVerticalGroup(
             formalTagPannelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -122,7 +153,7 @@ public class Formal extends javax.swing.JFrame {
                 .addComponent(formalDepartmentTemplateTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(formalTemplateTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         assignmentLabel.setText("Assignment:");
@@ -144,32 +175,41 @@ public class Formal extends javax.swing.JFrame {
         schoolLabel.setText("School:");
         schoolLabel.setPreferredSize(new java.awt.Dimension(250, 14));
 
-        authorCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "" }));
-
         authorLabel.setText("Author(s):");
 
         labTeamMemberLabel.setText("Lab Team Members:");
 
         authorEditButton.setLabel("Edit");
+        authorEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                authorEditButtonActionPerformed(evt);
+            }
+        });
 
         labTeamMemberEditButton.setLabel("Edit");
+        labTeamMemberEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                labTeamMemberEditButtonActionPerformed(evt);
+            }
+        });
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-
-        headingsList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Abstract", "Introduction", "Theory ", "Methods", "      Experimental Procedure", "      Experimental Appratus", "      Material List", "Results ", "Disscussion", "Conclusion", "References ", "Apendix" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        jScrollPane1.setViewportView(headingsList);
 
         sectionsLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         sectionsLabel.setText("Sections");
 
-        headingsLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        headingsLabel.setText("Headings");
-
         sectionsEditButton.setText("Edit");
+        sectionsEditButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sectionsEditButtonActionPerformed(evt);
+            }
+        });
+
+        sectionArea.setEditable(false);
+        sectionArea.setColumns(20);
+        sectionArea.setRows(5);
+        sectionArea.setText(h.getAll());
+        jScrollPane2.setViewportView(sectionArea);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -179,31 +219,28 @@ public class Formal extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sectionsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(sectionsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel2Layout.createSequentialGroup()
-                            .addGap(24, 24, 24)
-                            .addComponent(headingsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(24, Short.MAX_VALUE))
+                        .addComponent(sectionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jScrollPane2)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(sectionsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(12, 12, 12))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(sectionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(sectionsEditButton))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(sectionsLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(headingsLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
+                        .addGap(6, 6, 6))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(28, 28, 28))
+                        .addComponent(sectionsEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24))))
         );
 
         month1Combo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "January ", "Febuary ", "March ", "April ", "May ", "June ", "July ", "August ", "September ", "October", "November", "December" }));
@@ -237,20 +274,6 @@ public class Formal extends javax.swing.JFrame {
 
         submissionDateLabel.setText("Submission Date:");
 
-        RTFCheckBox.setText("RTF");
-        RTFCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                RTFCheckBoxActionPerformed(evt);
-            }
-        });
-
-        latexCheckBox.setText("LaTeX");
-        latexCheckBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                latexCheckBoxActionPerformed(evt);
-            }
-        });
-
         generateButton.setText("Generate ");
         generateButton.setPreferredSize(new java.awt.Dimension(80, 20));
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -259,8 +282,29 @@ public class Formal extends javax.swing.JFrame {
             }
         });
 
-        previousButton.setText("Previous");
-        previousButton.setPreferredSize(new java.awt.Dimension(80, 20));
+        authorsTextArea.setEditable(false);
+        authorsTextArea.setColumns(20);
+        authorsTextArea.setRows(5);
+        authorsTextArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                authorsTextAreaMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(authorsTextArea);
+
+        membersTextArea.setEditable(false);
+        membersTextArea.setColumns(20);
+        membersTextArea.setRows(5);
+        jScrollPane3.setViewportView(membersTextArea);
+
+        buttonGroup1.add(texButton);
+        texButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        texButton.setSelected(true);
+        texButton.setText(".tex");
+
+        buttonGroup1.add(rtfButton);
+        rtfButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rtfButton.setText(".rtf");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -268,33 +312,28 @@ public class Formal extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(formalTagPannel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(assignmentLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(titleTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(courseNumberTextbox)
-                            .addComponent(assignmentTextbox)
-                            .addComponent(courseNumberCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(courseNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(courseNameTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(schoolTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(schoolLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(authorCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(authorLabel)
-                            .addComponent(labTeamMemberCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(labTeamMemberLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(formalTagPannel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(assignmentLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(titleTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(courseNumberTextbox)
+                                .addComponent(assignmentTextbox)
+                                .addComponent(courseNumberCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(courseNameLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(courseNameTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(schoolTextbox, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(schoolLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(authorLabel)))))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(authorEditButton)
-                            .addComponent(labTeamMemberEditButton)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(106, 106, 106)
+                        .addGap(4, 4, 4)
+                        .addComponent(authorEditButton)
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(experimentPerfomredOnLabel)
                             .addGroup(layout.createSequentialGroup()
@@ -303,27 +342,43 @@ public class Formal extends javax.swing.JFrame {
                                         .addComponent(month1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(day1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(submissionDateLabel)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(month2combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(day2combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(submissionDateLabel))
+                                        .addComponent(day2combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(year2Combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(year1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(year1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addContainerGap(60, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(138, 138, 138)
-                        .addComponent(RTFCheckBox)
-                        .addGap(18, 18, 18)
-                        .addComponent(latexCheckBox)))
-                .addContainerGap(38, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(previousButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(35, 35, 35)
-                .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(118, 118, 118))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
+                        .addComponent(labTeamMemberEditButton)
+                        .addGap(42, 42, 42)
+                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(labTeamMemberLabel)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(texButton)
+                        .addGap(94, 94, 94))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(91, 91, 91)
+                        .addComponent(rtfButton, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(134, 134, 134))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -342,49 +397,62 @@ public class Formal extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(courseNumberCodeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(courseNumberTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 218, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(courseNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(courseNumberTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(courseNameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(courseNameTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(courseNameTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(experimentPerfomredOnLabel))
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(experimentPerfomredOnLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(month1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(day1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(year1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(36, 36, 36))
+                            .addComponent(submissionDateLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(schoolLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(month1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(day1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(year1Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(month2combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(day2combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(year2Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(rtfButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(texButton))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(48, 48, 48))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(schoolLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(schoolTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(submissionDateLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(authorLabel)
-                    .addComponent(month2combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(day2combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(year2Combo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(authorCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(authorEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labTeamMemberLabel)
-                    .addComponent(RTFCheckBox)
-                    .addComponent(latexCheckBox))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(labTeamMemberCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labTeamMemberEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(34, 34, 34)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(previousButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(69, Short.MAX_VALUE))
+                        .addComponent(schoolTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(authorLabel)
+                        .addGap(2, 2, 2)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(labTeamMemberLabel))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(authorEditButton)
+                                .addGap(57, 57, 57)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
+                                .addComponent(labTeamMemberEditButton)
+                                .addGap(62, 62, 62))))))
         );
 
         pack();
@@ -414,21 +482,152 @@ public class Formal extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_day2comboActionPerformed
 
-    private void RTFCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RTFCheckBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_RTFCheckBoxActionPerformed
-
-    private void latexCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_latexCheckBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_latexCheckBoxActionPerformed
-
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-        // TODO add your handling code here:
+        // write the sed commands
+        script = new ScriptEditor();
+        String ls = File.separator;
+        String defaultDocName;
+        if (format == FORMAT.RTF) {
+            defaultDocName = "generatedDocument.rtf";
+        } else {
+            defaultDocName = "generatedDocument.rtf";
+        }
+        Path userDoc = Paths.get(defaultDocName);
+        String memStr = "";
+        String authStr = "";        
+        String subDate = "";
+        String expDate = "";
+
+        
+        subDate = day1Combo.getSelectedItem().toString() + " "
+                  + month1Combo.getSelectedItem().toString() + " "
+                  + year1Combo.getSelectedItem().toString();
+        
+        expDate = day2combo.getSelectedItem().toString() + " "
+                  + month2combo.getSelectedItem().toString() + " "
+                  + year2Combo.getSelectedItem().toString();        
+        
+        
+        if (texButton.isSelected()) {
+            format = FORMAT.TEX;
+            if (members.isEmpty()) {
+                memStr = " ";
+            } else {
+                memStr = "Lab Team: \\\n";
+                for (int i = 0; i < members.size(); i++) {
+                    memStr += members.get(i) + "\\\n";
+                }
+            }
+            if (authors.isEmpty()) {
+                authStr = " ";
+            } else {
+                for (int i = 0; i < authors.size(); i++) {
+                    authStr += authors.get(i) + "\\\n";
+                }   
+            }
+        }
+        if (rtfButton.isSelected()) {
+            format = FORMAT.RTF;
+            if (members.isEmpty()) {
+                memStr = " ";
+            } else {
+                memStr = "Lab Team: \\\\par ";
+                for (int i = 0; i < members.size(); i++) {
+                    memStr += members.get(i) + "\\\\par ";
+                }
+            }
+            if (authors.isEmpty()) {
+                authStr = " ";
+            } else {
+                for (int i = 0; i < authors.size(); i++) {
+                    authStr += authors.get(i) + "\\\\par ";
+                }       
+            }
+        }        
+
+        Path userSaveLoc = null;
+        final JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Save document...");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal;
+
+
+        returnVal = fc.showSaveDialog(this);
+        userSaveLoc = fc.getSelectedFile().toPath();
+
+
+        
+        try {
+            script.newCommand(ScriptEditor.TAG_TITLE, titleTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_ASSIGNMENT, assignmentTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_COURSE_CODE, courseNumberTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_COURSE_NAME, courseNameTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_DEPARTMENT, department);
+            script.newCommand(ScriptEditor.TAG_SCHOOL, schoolTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_AUTHORS, authStr);
+            script.newCommand(ScriptEditor.TAG_TEAM, memStr);
+            script.newCommand(ScriptEditor.TAG_EXPERIMENT_DATE, expDate);
+            script.newCommand(ScriptEditor.TAG_SUBMISSION_DATE, subDate);
+
+            if (format == FORMAT.RTF) {
+                script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatRTF());
+                script.newCommand(ScriptEditor.TAG_TOC, h.formatRTFToC());
+                
+            } else 
+                script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatTeX());
+
+            try {
+                // run commands
+                if (format == FORMAT.TEX) {
+                    defaultDocName = assignmentTextbox.getText() + ".tex";
+                }
+                else 
+                    defaultDocName = assignmentTextbox.getText() + ".rtf";
+                userDoc = script.runScript(template, format);
+                
+            } catch (InterruptedException ex) {
+                
+            }
+            
+            try {
+                userSaveLoc = Paths.get(userSaveLoc.toString() + ls + defaultDocName);
+                Files.deleteIfExists(userSaveLoc);
+                Files.copy(userDoc, userSaveLoc, StandardCopyOption.COPY_ATTRIBUTES);
+                JOptionPane.showMessageDialog(null, String.format("Successfully saved to: %s", 
+                                                                  userSaveLoc.toString()));
+                Files.delete(userDoc);
+        } catch (FileAlreadyExistsException faeex) {
+
+        }
+
+        } catch (IOException ex) {
+            
+        }
     }//GEN-LAST:event_generateButtonActionPerformed
 
     private void year1ComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_year1ComboActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_year1ComboActionPerformed
+
+    private void authorEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_authorEditButtonActionPerformed
+        NameEditor ne = new NameEditor(this, authors);
+        ne.setVisible(true);
+    }//GEN-LAST:event_authorEditButtonActionPerformed
+
+    private void labTeamMemberEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_labTeamMemberEditButtonActionPerformed
+        NameEditor ne = new NameEditor(this, members);
+        ne.setVisible(true);        
+    }//GEN-LAST:event_labTeamMemberEditButtonActionPerformed
+
+    private void authorsTextAreaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_authorsTextAreaMouseClicked
+        // TODO add your handling code here:
+        this.updateNamesAreas();
+    }//GEN-LAST:event_authorsTextAreaMouseClicked
+
+    private void sectionsEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sectionsEditButtonActionPerformed
+        SectionEditor se = new SectionEditor(this, h);
+        se.setVisible(true);
+    }//GEN-LAST:event_sectionsEditButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -464,14 +663,35 @@ public class Formal extends javax.swing.JFrame {
             }
         });
     }
+    
+    public void updateNamesAreas() {
+        String memStr = "";
+        String authStr = "";
+        
+        for (int i = 0; i < members.size(); i++) {
+            memStr += members.get(i) + "\n";
+        }
+        for (int i = 0; i < authors.size(); i++) {
+            authStr += authors.get(i) + "\n";
+        }
+        
+        authorsTextArea.setText(authStr);
+        membersTextArea.setText(memStr);
+    }
+    
+    public void updateSections() {
+        sectionArea.setText(h.getAll());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox RTFCheckBox;
     private javax.swing.JLabel assignmentLabel;
     private javax.swing.JTextField assignmentTextbox;
-    private javax.swing.JComboBox<String> authorCombo;
     private javax.swing.JButton authorEditButton;
     private javax.swing.JLabel authorLabel;
+    private javax.swing.JTextArea authorsTextArea;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.ButtonGroup buttonGroup3;
     private javax.swing.JLabel courseNameLabel;
     private javax.swing.JTextField courseNameTextbox;
     private javax.swing.JLabel courseNumberCodeLabel;
@@ -483,22 +703,23 @@ public class Formal extends javax.swing.JFrame {
     private javax.swing.JPanel formalTagPannel;
     private javax.swing.JTextField formalTemplateTextbox;
     private javax.swing.JButton generateButton;
-    private javax.swing.JLabel headingsLabel;
-    private javax.swing.JList<String> headingsList;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JComboBox<String> labTeamMemberCombo;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton labTeamMemberEditButton;
     private javax.swing.JLabel labTeamMemberLabel;
-    private javax.swing.JCheckBox latexCheckBox;
+    private javax.swing.JTextArea membersTextArea;
     private javax.swing.JComboBox<String> month1Combo;
     private javax.swing.JComboBox<String> month2combo;
-    private javax.swing.JButton previousButton;
+    private javax.swing.JRadioButton rtfButton;
     private javax.swing.JLabel schoolLabel;
     private javax.swing.JTextField schoolTextbox;
+    private javax.swing.JTextArea sectionArea;
     private javax.swing.JButton sectionsEditButton;
     private javax.swing.JLabel sectionsLabel;
     private javax.swing.JLabel submissionDateLabel;
+    private javax.swing.JRadioButton texButton;
     private javax.swing.JLabel titleLabel;
     private javax.swing.JTextField titleTextbox;
     private javax.swing.JComboBox<String> year1Combo;

@@ -1,3 +1,9 @@
+/* File: TestMain.java
+ * Author: Connor McGarty, cmcgarty@uab.edu
+ * Assignment: Template Generator, Team 5 EE333 Spring 2018
+ * Vers: 1.0.0 04/17/2018 csm - initial coding
+ * 
+*/
 
 
 import java.io.File;
@@ -9,14 +15,17 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 /**
- * Testing class. 
+ * Testing class. Not executed at any time during normal user case. Used for 
+ * testing ScriptEditor class functionality before GUI was completed. 
  *
- * @author Connor S. McGarty <cmcgarty@uab.edu>
+ * @author Connor S. McGarty cmcgarty@uab.edu
  */
 public class TestMain {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.IOException exception
+     * @throws java.lang.InterruptedException exception
      */
     public static void main(String[] args) throws IOException, InterruptedException {
         
@@ -41,6 +50,7 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatRTF());
         */
         
+        /*
         // informal
         Headings h = new Headings(TEMPLATE.INFORMAL);
         script.newCommand(ScriptEditor.TAG_MEMO_TO, "Dr. David Green");
@@ -48,7 +58,7 @@ public class TestMain {
         script.newCommand(ScriptEditor.TAG_MEMO_DATE, "23 April 2018");
         script.newCommand(ScriptEditor.TAG_MEMO_SUBJECT, "This is a test");
         script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatRTF());
-
+        */
         
         /*
         Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.tex");
@@ -57,7 +67,7 @@ public class TestMain {
         } catch (FileAlreadyExistsException faeex) {
             
         }*/
-        
+        /*
         Path usrDocPath = Paths.get("C:/Users/Connor/School/myDoc.rtf");
         try {
             usrDocPath = Files.createFile(usrDocPath);
@@ -68,7 +78,7 @@ public class TestMain {
         //Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.TEX, usrDocPath);
         //Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.TEX, usrDocPath);
         //Path userDoc = script.runScript(TEMPLATE.FORMAL, FORMAT.RTF, usrDocPath);
-        Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.RTF, usrDocPath);
+        Path userDoc = script.runScript(TEMPLATE.INFORMAL, FORMAT.RTF);
 
         try {
             Files.deleteIfExists(usrDocPath);
@@ -76,7 +86,7 @@ public class TestMain {
         } catch (FileAlreadyExistsException faeex) {
 
         }
-
+        */
     }
     
 }

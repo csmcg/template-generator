@@ -1,6 +1,6 @@
 /* File: ScriptEditor.java
  * Author: Connor McGarty, cmcgarty@uab.edu
- * Assignment: Project 7 EE333 Spring 2018
+ * Assignment: Template Generator EE333 Spring 2018, Team 5
  * Vers: 1.0.0 04/17/2018 csm - initial coding
  */
 
@@ -17,8 +17,12 @@ import java.nio.file.StandardCopyOption;
 
 
 /**
+ * The ScriptEditor class executes a system call to GNU sed, in order to edit
+ * master templates into the user's supplied template information. Contains a 
+ * script file that is written to, matching replacement strings with deliberately
+ * chosen tags placed in the two master templates. 
  *
- * @author Connor
+ * @author Connor McGarty cmcgarty@uab.edu
  */
 public class ScriptEditor {
     
@@ -50,6 +54,7 @@ public class ScriptEditor {
     private File             script;
 
     /**
+     * Constructs a ScriptEditor object that contains a script file.
      * 
      */
     public ScriptEditor() {
@@ -61,26 +66,30 @@ public class ScriptEditor {
                 script.createNewFile();
             scriptStream = new FileOutputStream(script);
         } catch (IOException ex) {
-            System.out.println(ex);
+            //System.out.println(ex);
         }
     }
     
     /**
+     * Constructs a global substitution sed command, searching for the ScriptEditor
+     * static template tags and replaced with strings retrieved from the user by
+     * the GUI. 
      * 
-     * @param templateField
-     * @param userField
-     * @throws IOException 
+     * @param templateField template tag, accessed via static public fields 
+     * of ScriptEditor class. The regex's searched by sed to be replaced by userField.
+     * @param userField user's string to replace template fields
+     * @throws IOException exception
      */
     public void newCommand(String templateField, String userField) throws IOException {
         String cmd;
         /* The sed substitution command  */
         cmd = String.format("s@%s@%s@g\n", templateField, userField);
-        scriptStream.write(cmd.getBytes());
+        scriptStream.write(cmd.getBytes()); // write to file
     }
     
     /**
      * Deletes the current working script file and creates a new empty file.
-     * @throws java.io.IOException
+     * @throws java.io.IOException exception
      */
     public void deleteScript() throws IOException {
         script.delete();
@@ -91,14 +100,13 @@ public class ScriptEditor {
     /**
      * Executes sed script on master template. 
      * 
-     * @param template
-     * @param format
-     * @param usrSaveLoc
-     * @return 
-     * @throws java.io.IOException 
-     * @throws java.lang.InterruptedException 
+     * @param template which template, formal or informal
+     * @param format which file format, .tex or .rtf
+     * @return returns path to the edited master template
+     * @throws java.io.IOException exception
+     * @throws java.lang.InterruptedException  exception
      */
-    public Path runScript(TEMPLATE template, FORMAT format, Path usrSaveLoc) throws IOException, InterruptedException {
+    public Path runScript(TEMPLATE template, FORMAT format) throws IOException, InterruptedException {
         
         String ls = File.separator;
         
@@ -111,7 +119,7 @@ public class ScriptEditor {
             if (format == FORMAT.TEX) {
                 masterTemplatePath = userDir + ls + "src" + ls + "templates" +
                         ls + "FormalMasterTemplate" + ".tex";
-            } if (format == FORMAT.RTF) {
+            } else if (format == FORMAT.RTF) {
                 masterTemplatePath = userDir + ls + "src" + ls + "templates" +
                         ls + "FormalMasterTemplate" + ".rtf";
             }
@@ -120,7 +128,7 @@ public class ScriptEditor {
             if (format == FORMAT.TEX) {
                 masterTemplatePath = userDir + ls + "src" + ls + "templates" +
                         ls + "InformalMasterTemplate" + ".tex";
-            } if (format == FORMAT.RTF) {
+            } else if (format == FORMAT.RTF) {
                 masterTemplatePath = userDir + ls + "src" + ls + "templates" +
                         ls + "InformalMasterTemplate" + ".rtf";
             }            
@@ -155,16 +163,17 @@ public class ScriptEditor {
         }
         
         masterCopy = Paths.get(userDir + ls + "masterCopy.txt");
+        this.deleteScript();
         return masterCopy;
     }
     
     /**
      * Taken from: https://examples.javacodegeeks.com/core-java/io/file/4-ways-to-copy-file-in-java/
+     * Copies a file (unused method))
      * 
-     * 
-     * @param source
-     * @param dest
-     * @throws IOException 
+     * @param source source file
+     * @param dest file to copy source to
+     * @throws IOException exception
      */
     public void copyFile(File source, File dest) throws IOException {
 

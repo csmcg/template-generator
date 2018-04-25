@@ -6,7 +6,7 @@
 
 /**
  *
- * @author Connor S. McGarty <cmcgarty@uab.edu>
+ * @author Connor S. McGarty cmcgarty@uab.edu
  */
 
 public enum TEMPLATE {

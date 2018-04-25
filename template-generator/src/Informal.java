@@ -1,36 +1,62 @@
-
-import java.util.ArrayList;
-import javax.swing.ListModel;
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* File: Informal.java
+ * Author: Chris Jacques, Malik Midani, Connor McGarty
+ * Assignment: Template Generator - Team 5 Project EE333 Spring 2018
+ * Vers: 1.0.0 04/20/18 
+ * 
  */
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.FileAlreadyExistsException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+
+
+
 /**
- *
- * @author cajac
+ * Graphical environment for editing informal report template.
+ * 
+ * @author Chris Jacques 
  */
 public class Informal extends javax.swing.JDialog {
     
-    private String to;
     private String department;
-    private String template;
-    private String from;
-    private String month;
-    private String day;
-    private String year;
-    private ListModel<String> headings;
-    private String heading;
+    private TEMPLATE template;
+    private FORMAT   format;
+    private Headings h;
+    private ScriptEditor script;
 
     /**
      * Creates new form Informal
+     *
+     * @param parent frame gui was spawned from
+     * @param modal lj
      */
     public Informal(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
     }
+    
+    /**
+     * Constructs the informal frame. 
+     * 
+     * @param department department edited
+     * @param template which template, formal or informal
+     */
+    public Informal(String department, TEMPLATE template) {
+        h = new Headings(TEMPLATE.INFORMAL);
+        this.template = template;
+        this.department = department;
+        
+        initComponents(); 
+        
+        // set the 
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -43,6 +69,7 @@ public class Informal extends javax.swing.JDialog {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTree1 = new javax.swing.JTree();
+        buttonGroup1 = new javax.swing.ButtonGroup();
         tagPanel = new javax.swing.JPanel();
         departmentTag = new javax.swing.JTextField();
         templateTag = new javax.swing.JTextField();
@@ -60,27 +87,30 @@ public class Informal extends javax.swing.JDialog {
         subjectLabel = new javax.swing.JLabel();
         headingsPanel = new javax.swing.JPanel();
         headingsLabel = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        headingsList = new javax.swing.JList<>();
         editButton = new javax.swing.JButton();
-        previousButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        sectionArea = new javax.swing.JTextArea();
         generateButton = new javax.swing.JButton();
-        LaTeX = new javax.swing.JCheckBox();
-        LaTeX1 = new javax.swing.JCheckBox();
+        texButton = new javax.swing.JRadioButton();
+        rtfButton = new javax.swing.JRadioButton();
 
         jScrollPane1.setViewportView(jTree1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setLocationByPlatform(true);
         setMinimumSize(new java.awt.Dimension(700, 355));
 
         tagPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         tagPanel.setPreferredSize(new java.awt.Dimension(270, 70));
 
         departmentTag.setEditable(false);
-        departmentTag.setText("Electrical Engineering (EE)");
+        departmentTag.setText(department);
         departmentTag.setMinimumSize(new java.awt.Dimension(6, 25));
         departmentTag.setPreferredSize(new java.awt.Dimension(130, 25));
+        departmentTag.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                departmentTagActionPerformed(evt);
+            }
+        });
 
         templateTag.setEditable(false);
         templateTag.setText("Informal");
@@ -99,7 +129,7 @@ public class Informal extends javax.swing.JDialog {
                 .addGroup(tagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(templateTag, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(departmentTag, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(12, Short.MAX_VALUE))
         );
         tagPanelLayout.setVerticalGroup(
             tagPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -108,7 +138,7 @@ public class Informal extends javax.swing.JDialog {
                 .addComponent(departmentTag, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(templateTag, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         departmentTag.getAccessibleContext().setAccessibleName("");
@@ -165,8 +195,6 @@ public class Informal extends javax.swing.JDialog {
         headingsLabel.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
         headingsLabel.setText("Headings:");
 
-        jScrollPane2.setViewportView(headingsList);
-
         editButton.setText("Edit");
         editButton.setPreferredSize(new java.awt.Dimension(80, 20));
         editButton.addActionListener(new java.awt.event.ActionListener() {
@@ -174,6 +202,12 @@ public class Informal extends javax.swing.JDialog {
                 editButtonActionPerformed(evt);
             }
         });
+
+        sectionArea.setEditable(false);
+        sectionArea.setColumns(20);
+        sectionArea.setRows(5);
+        jScrollPane3.setViewportView(sectionArea);
+        sectionArea.setText(h.getAll());
 
         javax.swing.GroupLayout headingsPanelLayout = new javax.swing.GroupLayout(headingsPanel);
         headingsPanel.setLayout(headingsPanelLayout);
@@ -183,35 +217,25 @@ public class Informal extends javax.swing.JDialog {
                 .addContainerGap()
                 .addGroup(headingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(headingsPanelLayout.createSequentialGroup()
-                        .addComponent(headingsLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(headingsPanelLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 302, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap())
+                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(headingsLabel))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         headingsPanelLayout.setVerticalGroup(
             headingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headingsPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(headingsLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(headingsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3)
                     .addGroup(headingsPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2))
+                        .addComponent(editButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(11, 11, 11))
         );
-
-        previousButton.setText("Previous");
-        previousButton.setPreferredSize(new java.awt.Dimension(80, 20));
-        previousButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                previousButtonActionPerformed(evt);
-            }
-        });
 
         generateButton.setText("Generate");
         generateButton.setPreferredSize(new java.awt.Dimension(80, 20));
@@ -221,9 +245,19 @@ public class Informal extends javax.swing.JDialog {
             }
         });
 
-        LaTeX.setText("LaTeX");
+        buttonGroup1.add(texButton);
+        texButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        texButton.setSelected(true);
+        texButton.setText(".tex");
+        texButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                texButtonActionPerformed(evt);
+            }
+        });
 
-        LaTeX1.setText("RTF");
+        buttonGroup1.add(rtfButton);
+        rtfButton.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        rtfButton.setText(".rtf");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -253,61 +287,59 @@ public class Informal extends javax.swing.JDialog {
                             .addComponent(toTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(toLabel)
                             .addComponent(fromTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(headingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(76, 76, 76)
-                                .addComponent(previousButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(64, 64, 64)
-                                .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(LaTeX)
-                                .addGap(18, 18, 18)
-                                .addComponent(LaTeX1)))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(105, 105, 105)
+                                .addComponent(texButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(rtfButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(headingsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 174, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(155, 155, 155))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(tagPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(toLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(toTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(fromLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(fromTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(monthLabel)
-                                    .addComponent(dayLabel)
-                                    .addComponent(yearLabel)))
-                            .addComponent(headingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(tagPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(toLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(monthCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(dayCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(yearCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(subjectLabel))
-                            .addComponent(LaTeX1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(LaTeX, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(toTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(fromLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fromTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(monthLabel)
+                            .addComponent(dayLabel)
+                            .addComponent(yearLabel)))
+                    .addComponent(headingsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(subjectTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(previousButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 6, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(monthCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(dayCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(yearCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(rtfButton)
+                        .addComponent(texButton)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(generateButton, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(subjectLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(subjectTextbox, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(0, 13, Short.MAX_VALUE))
         );
 
         pack();
@@ -330,34 +362,120 @@ public class Informal extends javax.swing.JDialog {
     }//GEN-LAST:event_yearComboActionPerformed
 
     private void editButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editButtonActionPerformed
-        // TODO add your handling code here:
+        SectionEditor se = new SectionEditor(this, h);
+        se.setVisible(true);
     }//GEN-LAST:event_editButtonActionPerformed
 
-    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_previousButtonActionPerformed
-
+    /**
+     * Grabs all information from user-editable fields, compiles them into a sed
+     * script, and executes the script via ScriptEditor. Resulting file is copied
+     * to user supplied path via a save dialogue.
+     * 
+     * @param evt 
+     */
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
-        // TODO add your handling code here:
-        department = departmentTag.getText();
-        template = templateTag.getText();
-        to = toTextbox.getText();
-        from = fromTextbox.getText();
-        month = (String) monthCombo.getSelectedItem();
-        day = (String) dayCombo.getSelectedItem();
-        year = (String) yearCombo.getSelectedItem();
-        headings = headingsList.getModel();  // use headings.getElementAt(int i); to get the string at a position
+        // write the sed commands
+        script = new ScriptEditor();
+        String ls = File.separator;
+        String defaultDocName;
+
+        if (format == FORMAT.RTF) {
+            defaultDocName = "generatedDocument.rtf";
+        } else {
+            defaultDocName = "generatedDocument.rtf";
+        }
+        Path userDoc = Paths.get(defaultDocName);
+        String memStr = "";
+        String authStr = "";        
+        String date = "";
+
+
+        date = dayCombo.getSelectedItem().toString() + " " + 
+               monthCombo.getSelectedItem().toString() + " " +
+               yearCombo.getSelectedItem().toString();
         
+        if (texButton.isSelected()) {
+            format = FORMAT.TEX;
+        }
+        else if (rtfButton.isSelected())
+            format = FORMAT.RTF;
+
         
+        Path userSaveLoc = null;
+        final JFileChooser fc = new JFileChooser();
+        fc.setDialogTitle("Save document...");
+        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        int returnVal;
+
+
+        returnVal = fc.showSaveDialog(this);
+        userSaveLoc = fc.getSelectedFile().toPath();
+
+
         
-        
-        
+        try {
+            
+            script.newCommand(ScriptEditor.TAG_MEMO_TO, toTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_MEMO_FROM, fromTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_MEMO_SUBJECT, subjectTextbox.getText());
+            script.newCommand(ScriptEditor.TAG_MEMO_DATE, date);
+
+            if (format == FORMAT.RTF) {
+                script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatRTF());
+            } else 
+                script.newCommand(ScriptEditor.TAG_SECTIONS, h.formatTeX());
+
+            try {
+                // run commands
+                if (format == FORMAT.TEX) {
+                    if (!subjectTextbox.getText().isEmpty())                    
+                        defaultDocName = subjectTextbox.getText() + ".tex";
+                    else {
+                        defaultDocName = "myInformal.tex";
+                    }
+                }
+                else {
+                    if (!subjectTextbox.getText().isEmpty()) {
+                        defaultDocName = subjectTextbox.getText() + ".rtf";
+                    }
+                    else {
+                        defaultDocName = "myInformal.rtf";
+                    }
+                }
+                userDoc = script.runScript(template, format);
+                
+            } catch (InterruptedException ex) {
+                
+            }
+            
+            try {
+                userSaveLoc = Paths.get(userSaveLoc.toString() + ls + defaultDocName);
+                Files.deleteIfExists(userSaveLoc);
+                Files.copy(userDoc, userSaveLoc, StandardCopyOption.COPY_ATTRIBUTES);
+                JOptionPane.showMessageDialog(null, String.format("Successfully saved to: %s", 
+                                                                  userSaveLoc.toString()));
+                Files.delete(userDoc);
+        } catch (FileAlreadyExistsException faeex) {
+
+        }
+
+        } catch (IOException ex) {
+            
+        }        
         
     }//GEN-LAST:event_generateButtonActionPerformed
 
     private void templateTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_templateTagActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_templateTagActionPerformed
+
+    private void texButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_texButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_texButtonActionPerformed
+
+    private void departmentTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departmentTagActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_departmentTagActionPerformed
 
     /**
      * @param args the command line arguments
@@ -400,10 +518,16 @@ public class Informal extends javax.swing.JDialog {
             }
         });
     }
+    
+    /**
+     * Update the sections in the section text area. 
+     */
+    public void updateSections() {
+        sectionArea.setText(h.getAll());
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox LaTeX;
-    private javax.swing.JCheckBox LaTeX1;
+    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JComboBox<String> dayCombo;
     private javax.swing.JLabel dayLabel;
     private javax.swing.JTextField departmentTag;
@@ -412,18 +536,19 @@ public class Informal extends javax.swing.JDialog {
     private javax.swing.JTextField fromTextbox;
     private javax.swing.JButton generateButton;
     private javax.swing.JLabel headingsLabel;
-    private javax.swing.JList<String> headingsList;
     private javax.swing.JPanel headingsPanel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTree jTree1;
     private javax.swing.JComboBox<String> monthCombo;
     private javax.swing.JLabel monthLabel;
-    private javax.swing.JButton previousButton;
+    private javax.swing.JRadioButton rtfButton;
+    private javax.swing.JTextArea sectionArea;
     private javax.swing.JLabel subjectLabel;
     private javax.swing.JTextField subjectTextbox;
     private javax.swing.JPanel tagPanel;
     private javax.swing.JTextField templateTag;
+    private javax.swing.JRadioButton texButton;
     private javax.swing.JLabel toLabel;
     private javax.swing.JTextField toTextbox;
     private javax.swing.JComboBox<String> yearCombo;
