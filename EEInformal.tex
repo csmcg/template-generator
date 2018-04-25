@@ -1,0 +1,85 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Experimental Version
+% Version 0.0.3 20160208 dgg -- turn off section numbering
+% Version 0.0.2 20160129 dgg -- original experiment
+% TBD: Consider using a bibliographic package for references (someday/maybe)
+% 
+% Informal EE Report
+%
+% Memorandum style reports are usually used for small projects and industrial
+% communications. These reports are usually shorter and less rigid in format
+% than formal reports. However, they do contain background, results, and
+% discussion even if not formally labeled as such.
+%
+% Informal written reports should contain: 1) transmittal documentation, 2) a
+% one to two-page summary, 3) all pertinent tables and figures that explain and
+% present the results and conclusions, and 4) any detailed calculations.
+%
+% Transmittal Documentation
+%
+% In the style of a memorandum, the informal report should begin with the name
+% of the person to whom the report is being submitted, the name of the person
+% submitting the report, the date of submission, and a meaningful subject line
+% describing the content of the report.
+%
+% Loosely based on:
+%
+% Memo
+% LaTeX Template
+% Version 1.0 (30/12/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Rob Oakes (http://www.oak-tree.us) with modifications by:
+% Vel (vel@latextemplates.com)
+%
+% Author of EE Informal Report Template (modifications):
+% David Green (dgreen@uab.edu) deriving from work by others at UAB Engineering
+%
+% License (for both original and this adapted template):
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{parskip} % Adds spacing between paragraphs
+\setlength{\parindent}{15pt} % Indent paragraphs
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage{color}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage{hyperref}
+% \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue, pdftitle=Informal EE Report, pdfauthor=David Green and Tom Jannett, pdfsubject=, pdfkeywords=}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{xtab}
+
+\bibliographystyle{ieeetr}   
+% \usepackage[pdftex]{graphicx}
+\makeatletter
+\newcommand\arraybslash{\let\\\@arraycr}
+\makeatother
+% Text styles
+\newcommand\textstyleInternetlink[1]{\textcolor{blue}{#1}}
+%
+% Footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[C]{Department of Electrical and Computer Engineering\\
+The University of Alabama at Birmingham}
+\rfoot{\thepage}
+% Fix Page 1 Style to NOT include page number
+\fancypagestyle{plain}{ %
+\fancyhf{} % clear all header and footer fields
+\fancyfoot[C]{Department of Electrical and Computer Engineering\\
+The University of Alabama at Birmingham} % except the center
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}}
+\setcounter{secnumdepth}{-2} % turn off section numbering

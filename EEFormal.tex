@@ -1,0 +1,45 @@
+%%%%%%%%%%\addvspace{1.5pc}
+% Experimental Version
+% Version 0.0.2 20160207 dgg -- original experiment
+% TBD: Consider using a bibliographic package for references (someday/maybe)
+% Formal EE Report
+%
+%
+% Author of EE Formal Report Template (modifications):
+% David Green (dgreen@uab.edu) deriving from work by others at UAB Engineering
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\usepackage{parskip} % Adds spacing between paragraphs
+\usepackage[letterpaper, margin=1in]{geometry}
+\setlength{\parindent}{15pt} % Indent paragraphs
+%\usepackage[latin1]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+\usepackage{amsmath}
+\usepackage{amssymb,amsfonts,textcomp}
+\usepackage{color}
+\usepackage{array}
+\usepackage{hhline}
+\usepackage{titlesec}
+\usepackage{hyperref}
+% \hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue, filecolor=blue, urlcolor=blue, pdftitle=Informal EE Report, pdfauthor=David Green and Tom Jannett, pdfsubject=, pdfkeywords=}
+\usepackage{enumitem}
+\usepackage{xtab}
+\usepackage{titletoc}
+\dottedcontents{section}[0em]{\addvspace{1.5pc}\bfseries}{0em}{1pc}
+\bibliographystyle{ieeetr}   
+\usepackage[pdftex]{graphicx}
+\makeatletter
+\newcommand\arraybslash{\let\\\@arraycr}
+\makeatother
+\titleformat{\section}[block]{\Large\bfseries\filcenter}{}{1em}{}
+\titleformat{\subsection}[hang]{\bfseries\itshape}{}{1em}{}
+% Turn off section numbering
+\setcounter{secnumdepth}{-2}
+% Text styles
+\newcommand\textstyleInternetlink[1]{\textcolor{blue}{#1}}
