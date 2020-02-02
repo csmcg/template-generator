@@ -6,7 +6,7 @@ t-g generates both LaTeX source files (.tex) as well as Rich Text Format (.rtf) 
 
 t-g utilizes [GNU sed](https://www.gnu.org/software/sed/), and as such requires it as a dependency. GNU sed is not packaged with t-g. To use t-g, install GNU sed and make sure the binary is in your executable path. 
 
-## From (readme)[README.txt]
+## From [readme](README.txt)
 >Template Generator is a graphical report template editor written in Java SE8 utilizing GNU sed as a backend. Two templates are provided, a formal report document
 and an informal report document that comply with the University of Alabama at Birmingham Department of Engineering standards. Templates can be generated in both LaTeX source code format and Rich Text Format for editing in word processing software such as Microsoft Word. 
 
